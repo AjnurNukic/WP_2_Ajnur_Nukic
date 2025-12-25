@@ -1,0 +1,231 @@
+<div class="tracker-wrapper">
+    <!-- Header -->
+    <header class="tracker-header">
+      <button class="btn-back" (click)="goBack()">← Nazad</button>
+      <h1>💰 Finance Tracker</h1>
+      <button class="btn-add" (click)="showForm = !showForm">
+        {{ showForm ? 'Otkaži' : '+ Dodaj Transakciju' }}
+      </button>
+    </header>
+  
+    <!-- Summary Cards -->
+    <div class="summary-container">
+      <div class="summary-card income">
+        <div class="summary-icon">💰</div>
+        <div class="summary-info">
+          <h3>{{ formatCurrency(getTotalIncome()) }}</h3>
+          <p>Ukupni prihodi</p>
+        </div>
+      </div>
+  
+      <div class="summary-card expense">
+        <div class="summary-icon">💸</div>
+        <div class="summary-info">
+          <h3>{{ formatCurrency(getTotalExpense()) }}</h3>
+          <p>Ukupni rashodi</p>
+        </div>
+      </div>
+  
+      <div class="summary-card balance" [class.negative]="getBalance() < 0">
+        <div class="summary-icon">💼</div>
+        <div class="summary-info">
+          <h3>{{ formatCurrency(getBalance()) }}</h3>
+          <p>Bilans</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Add Form -->
+    <div class="add-form" *ngIf="showForm">
+      <form [formGroup]="financeForm" (ngSubmit)="addFinanceEntry()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Datum</label>
+            <input type="date" formControlName="date" />
+          </div>
+  
+          <div class="form-group">
+            <label>Tip</label>
+            <select formControlName="type">
+              <option value="income">💰 Prihod</option>
+              <option value="expense">💸 Rashod</option>
+            </select>
+          </div>
+  
+          <div class="form-group">
+            <label>Iznos (KM)</label>
+            <input
+              type="number"
+              formControlName="amount"
+              step="0.01"
+              min="0"
+              placeholder="0.00"
+            />
+          </div>
+  
+          <div class="form-group">
+            <label>Kategorija</label>
+            <select formControlName="category">
+              <option value="">Odaberi kategoriju</option>
+              <option *ngFor="let cat of availableCategories" [value]="cat">
+                {{ cat }}
+              </option>
+            </select>
+          </div>
+  
+          <div class="form-group">
+            <label>Način plaćanja</label>
+            <select formControlName="paymentMethod">
+              <option value="cash">💵 Gotovina</option>
+              <option value="card">💳 Kartica</option>
+              <option value="transfer">🏦 Transfer</option>
+              <option value="other">📱 Ostalo</option>
+            </select>
+          </div>
+  
+          <div class="form-group full-width">
+            <label>Opis</label>
+            <input
+              type="text"
+              formControlName="description"
+              placeholder="npr. Kupovina u marketu"
+            />
+          </div>
+  
+          <button type="submit" class="btn-submit" [disabled]="financeForm.invalid">
+            💾 Sačuvaj
+          </button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Filter Tabs -->
+    <div class="filters-container">
+      <div class="filter-group">
+        <label>Tip:</label>
+        <div class="filter-buttons">
+          <button
+            [class.active]="filterType === 'all'"
+            (click)="filterType = 'all'; updateCharts()"
+          >
+            Sve
+          </button>
+          <button
+            [class.active]="filterType === 'income'"
+            (click)="filterType = 'income'; updateCharts()"
+          >
+            💰 Prihodi
+          </button>
+          <button
+            [class.active]="filterType === 'expense'"
+            (click)="filterType = 'expense'; updateCharts()"
+          >
+            💸 Rashodi
+          </button>
+        </div>
+      </div>
+  
+      <div class="filter-group">
+        <label>Period:</label>
+        <div class="filter-buttons">
+          <button
+            [class.active]="filterPeriod === 'week'"
+            (click)="filterPeriod = 'week'; updateCharts()"
+          >
+            Sedmica
+          </button>
+          <button
+            [class.active]="filterPeriod === 'month'"
+            (click)="filterPeriod = 'month'; updateCharts()"
+          >
+            Mjesec
+          </button>
+          <button
+            [class.active]="filterPeriod === 'year'"
+            (click)="filterPeriod = 'year'; updateCharts()"
+          >
+            Godina
+          </button>
+          <button
+            [class.active]="filterPeriod === 'all'"
+            (click)="filterPeriod = 'all'; updateCharts()"
+          >
+            Sve
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Charts Section -->
+    <div class="charts-container" *ngIf="!isLoading && financeEntries.length > 0">
+      <div class="chart-card">
+        <h3>📊 Rashodi po kategorijama</h3>
+        <div class="chart-wrapper">
+          <canvas #categoryChart></canvas>
+        </div>
+      </div>
+  
+      <div class="chart-card">
+        <h3>📈 Trend (zadnjih 30 dana)</h3>
+        <div class="chart-wrapper">
+          <canvas #trendChart></canvas>
+        </div>
+      </div>
+  
+      <div class="chart-card full-width">
+        <h3>📊 Mjesečni pregled</h3>
+        <div class="chart-wrapper">
+          <canvas #monthlyChart></canvas>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Loading State -->
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Učitavanje...</p>
+    </div>
+  
+    <!-- Transactions List -->
+    <div class="transactions-container" *ngIf="!isLoading">
+      <div class="empty-state" *ngIf="filteredEntries.length === 0">
+        <div class="empty-icon">💰</div>
+        <h2>Nema transakcija</h2>
+        <p>Dodaj prvu transakciju!</p>
+      </div>
+  
+      <div class="transactions-list" *ngIf="filteredEntries.length > 0">
+        <h3 class="list-title">📋 Transakcije ({{ filteredEntries.length }})</h3>
+        
+        <div
+          *ngFor="let entry of filteredEntries"
+          class="transaction-card"
+          [class.income]="entry.type === 'income'"
+          [class.expense]="entry.type === 'expense'"
+        >
+          <div class="transaction-icon">
+            {{ getTypeIcon(entry.type) }}
+          </div>
+  
+          <div class="transaction-content">
+            <div class="transaction-header">
+              <h4>{{ entry.description }}</h4>
+              <span class="transaction-amount" [class.income]="entry.type === 'income'">
+                {{ entry.type === 'income' ? '+' : '-' }}{{ formatCurrency(entry.amount) }}
+              </span>
+            </div>
+  
+            <div class="transaction-meta">
+              <span class="meta-item category">{{ entry.category }}</span>
+              <span class="meta-item date">📅 {{ formatDate(entry.date) }}</span>
+              <span class="meta-item payment">{{ getPaymentIcon(entry.paymentMethod || 'cash') }}</span>
+            </div>
+          </div>
+  
+          <button class="btn-delete" (click)="deleteFinanceEntry(entry.id)">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

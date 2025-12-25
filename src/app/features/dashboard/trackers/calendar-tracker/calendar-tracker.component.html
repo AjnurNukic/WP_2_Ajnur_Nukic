@@ -1,0 +1,143 @@
+<div class="tracker-wrapper">
+    <header class="tracker-header">
+      <button class="btn-back" (click)="goBack()">← Nazad</button>
+      <h1>📅 Calendar Tracker</h1>
+      <button class="btn-add" (click)="showForm = !showForm">
+        {{ showForm ? 'Otkaži' : '+ Dodaj Događaj' }}
+      </button>
+    </header>
+  
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <h3>{{ calendarEntries.length }}</h3>
+          <p>Ukupno događaja</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-info">
+          <h3>{{ getUpcomingEntries().length }}</h3>
+          <p>Predstoji</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <h3>{{ getCompletedCount() }}</h3>
+          <p>Završeno</p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="add-form" *ngIf="showForm">
+      <form [formGroup]="calendarForm" (ngSubmit)="addCalendarEntry()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Naslov</label>
+            <input type="text" formControlName="title" placeholder="npr. Sastanak sa timom" />
+          </div>
+          <div class="form-group">
+            <label>Tip</label>
+            <select formControlName="type">
+              <option value="event">🎉 Događaj</option>
+              <option value="task">✅ Zadatak</option>
+              <option value="reminder">⏰ Podsjetnik</option>
+              <option value="meeting">👥 Sastanak</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Datum</label>
+            <input type="date" formControlName="date" />
+          </div>
+          <div class="form-group">
+            <label>Vrijeme</label>
+            <input type="time" formControlName="time" />
+          </div>
+          <div class="form-group full-width">
+            <label>Opis</label>
+            <textarea formControlName="description" rows="3" placeholder="Detalji..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit" [disabled]="calendarForm.invalid">
+            💾 Sačuvaj
+          </button>
+        </div>
+      </form>
+    </div>
+  
+    <div class="filter-tabs">
+      <button [class.active]="filterType === 'all'" (click)="filterType = 'all'">
+        Sve ({{ calendarEntries.length }})
+      </button>
+      <button [class.active]="filterType === 'event'" (click)="filterType = 'event'">
+        🎉 Događaji
+      </button>
+      <button [class.active]="filterType === 'task'" (click)="filterType = 'task'">
+        ✅ Zadaci
+      </button>
+      <button [class.active]="filterType === 'reminder'" (click)="filterType = 'reminder'">
+        ⏰ Podsjetnici
+      </button>
+      <button [class.active]="filterType === 'meeting'" (click)="filterType = 'meeting'">
+        👥 Sastanci
+      </button>
+    </div>
+  
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Učitavanje...</p>
+    </div>
+  
+    <div class="entries-container" *ngIf="!isLoading">
+      <div class="empty-state" *ngIf="filteredEntries.length === 0">
+        <div class="empty-icon">📅</div>
+        <h2>Nema događaja</h2>
+        <p>Dodaj prvi događaj u kalendar!</p>
+      </div>
+  
+      <div class="entries-list" *ngIf="filteredEntries.length > 0">
+        <div 
+          *ngFor="let entry of filteredEntries" 
+          class="entry-card"
+          [class.completed]="entry.completed"
+          [class.today]="isToday(entry.date)"
+          [class.past]="isPast(entry.date) && !entry.completed"
+          [style.border-left-color]="getTypeColor(entry.type)"
+        >
+          <div class="entry-checkbox" *ngIf="entry.type === 'task'">
+            <input 
+              type="checkbox" 
+              [checked]="entry.completed"
+              (change)="toggleComplete(entry)"
+              [id]="'entry-' + entry.id"
+            />
+          </div>
+  
+          <div class="entry-content">
+            <div class="entry-header">
+              <div class="entry-title-section">
+                <span class="type-icon">{{ getTypeIcon(entry.type) }}</span>
+                <h3 [class.strikethrough]="entry.completed">{{ entry.title }}</h3>
+              </div>
+              <button class="btn-delete" (click)="deleteCalendarEntry(entry.id)">🗑️</button>
+            </div>
+  
+            <div class="entry-meta">
+              <span class="date-badge" [class.today]="isToday(entry.date)">
+                📅 {{ formatDate(entry.date) }}
+              </span>
+              <span class="time-badge">
+                ⏰ {{ entry.time }}
+              </span>
+              <span class="type-badge" [style.background-color]="getTypeColor(entry.type) + '20'" [style.color]="getTypeColor(entry.type)">
+                {{ getTypeName(entry.type) }}
+              </span>
+            </div>
+  
+            <p class="entry-description" *ngIf="entry.description">{{ entry.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

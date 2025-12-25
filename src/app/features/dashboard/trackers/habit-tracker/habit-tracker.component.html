@@ -1,0 +1,101 @@
+<div class="tracker-wrapper">
+    <!-- Header -->
+    <header class="tracker-header">
+      <button class="btn-back" (click)="goBack()">
+        ← Nazad
+      </button>
+      <h1>✅ Habit Tracker</h1>
+      <button class="btn-add" (click)="showForm = !showForm">
+        {{ showForm ? 'Otkaži' : '+ Dodaj Naviku' }}
+      </button>
+    </header>
+  
+    <!-- Add Habit Form -->
+    <div class="add-form" *ngIf="showForm">
+      <form [formGroup]="habitForm" (ngSubmit)="addHabit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Naziv navike</label>
+            <input 
+              type="text" 
+              formControlName="name"
+              placeholder="npr. Vježbaj 30 minuta"
+            />
+          </div>
+  
+          <div class="form-group">
+            <label>Frekvencija</label>
+            <select formControlName="frequency">
+              <option value="daily">Dnevno</option>
+              <option value="weekly">Sedmično</option>
+              <option value="monthly">Mjesečno</option>
+            </select>
+          </div>
+  
+          <button type="submit" class="btn-submit" [disabled]="habitForm.invalid">
+            Sačuvaj
+          </button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Loading State -->
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Učitavanje navika...</p>
+    </div>
+  
+    <!-- Habits List -->
+    <div class="habits-container" *ngIf="!isLoading">
+      
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="habits.length === 0">
+        <div class="empty-icon">📋</div>
+        <h2>Nemaš još navika</h2>
+        <p>Klikni na "Dodaj Naviku" da kreiraš prvu naviku!</p>
+      </div>
+  
+      <!-- Habits Grid -->
+      <div class="habits-grid" *ngIf="habits.length > 0">
+        <div 
+          *ngFor="let habit of habits" 
+          class="habit-card"
+          [class.completed]="isCompletedToday(habit)"
+        >
+          <!-- Card Header -->
+          <div class="card-header">
+            <h3>{{ habit.name }}</h3>
+            <button class="btn-delete" (click)="deleteHabit(habit.id)">
+              🗑️
+            </button>
+          </div>
+  
+          <!-- Streak Info -->
+          <div class="streak-info">
+            <div class="streak-badge">
+              🔥 {{ habit.streak }} dana zaredom
+            </div>
+            <div class="frequency-badge">
+              {{ habit.frequency === 'daily' ? 'Dnevno' : habit.frequency === 'weekly' ? 'Sedmično' : 'Mjesečno' }}
+            </div>
+          </div>
+  
+          <!-- Complete Button -->
+          <button 
+            class="btn-complete"
+            [class.completed]="isCompletedToday(habit)"
+            (click)="toggleComplete(habit)"
+          >
+            <span class="check-icon">{{ isCompletedToday(habit) ? '✓' : '○' }}</span>
+            <span>{{ isCompletedToday(habit) ? 'Završeno danas!' : 'Označi kao završeno' }}</span>
+          </button>
+  
+          <!-- Progress -->
+          <div class="progress-info">
+            <small>Ukupno kompletiranih dana: {{ habit.completedDates.length }}</small>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>

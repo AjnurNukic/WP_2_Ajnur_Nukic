@@ -1,0 +1,139 @@
+<div class="tracker-wrapper">
+    <!-- Header -->
+    <header class="tracker-header">
+      <button class="btn-back" (click)="goBack()">
+        ← Nazad
+      </button>
+      <h1>😴 Sleep Tracker</h1>
+      <button class="btn-add" (click)="showForm = !showForm">
+        {{ showForm ? 'Otkaži' : '+ Dodaj Spavanje' }}
+      </button>
+    </header>
+  
+    <!-- Stats Cards -->
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">⏰</div>
+        <div class="stat-info">
+          <h3>{{ getAverageHours() }}h</h3>
+          <p>Prosječno sati</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-info">
+          <h3>{{ getAverageQuality() }}/5</h3>
+          <p>Prosječna kvaliteta</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <h3>{{ sleepEntries.length }}</h3>
+          <p>Ukupno zapisa</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Add Sleep Form -->
+    <div class="add-form" *ngIf="showForm">
+      <form [formGroup]="sleepForm" (ngSubmit)="addSleepEntry()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Datum</label>
+            <input 
+              type="date" 
+              formControlName="date"
+            />
+          </div>
+  
+          <div class="form-group">
+            <label>Sati spavanja</label>
+            <input 
+              type="number" 
+              formControlName="hours"
+              step="0.5"
+              min="0"
+              max="24"
+              placeholder="7.5"
+            />
+          </div>
+  
+          <div class="form-group">
+            <label>Kvaliteta (1-5)</label>
+            <select formControlName="quality">
+              <option value="1">⭐ Loše</option>
+              <option value="2">⭐⭐ Ispod prosjeka</option>
+              <option value="3">⭐⭐⭐ Prosjek</option>
+              <option value="4">⭐⭐⭐⭐ Dobro</option>
+              <option value="5">⭐⭐⭐⭐⭐ Odlično</option>
+            </select>
+          </div>
+  
+          <div class="form-group full-width">
+            <label>Bilješke (opciono)</label>
+            <textarea 
+              formControlName="notes"
+              rows="3"
+              placeholder="npr. Probudio sam se umoran..."
+            ></textarea>
+          </div>
+  
+          <button type="submit" class="btn-submit" [disabled]="sleepForm.invalid">
+            💾 Sačuvaj
+          </button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Loading State -->
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Učitavanje podataka...</p>
+    </div>
+  
+    <!-- Sleep Entries List -->
+    <div class="entries-container" *ngIf="!isLoading">
+      
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="sleepEntries.length === 0">
+        <div class="empty-icon">😴</div>
+        <h2>Nemaš još zapisa</h2>
+        <p>Klikni na "Dodaj Spavanje" da evidentiraš san!</p>
+      </div>
+  
+      <!-- Entries List -->
+      <div class="entries-list" *ngIf="sleepEntries.length > 0">
+        <div 
+          *ngFor="let entry of sleepEntries" 
+          class="entry-card"
+        >
+          <div class="entry-header">
+            <div class="entry-date">
+              <span class="date-icon">📅</span>
+              <span>{{ formatDate(entry.date) }}</span>
+            </div>
+            <button class="btn-delete" (click)="deleteSleepEntry(entry.id)">
+              🗑️
+            </button>
+          </div>
+  
+          <div class="entry-body">
+            <div class="entry-stat">
+              <span class="stat-label">Sati:</span>
+              <span class="stat-value">{{ entry.hours }}h</span>
+            </div>
+            <div class="entry-stat">
+              <span class="stat-label">Kvaliteta:</span>
+              <span class="stat-value">{{ getStars(entry.quality) }}</span>
+            </div>
+          </div>
+  
+          <div class="entry-notes" *ngIf="entry.notes">
+            <strong>Bilješke:</strong> {{ entry.notes }}
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>

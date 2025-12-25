@@ -1,0 +1,101 @@
+<div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Kreiraj Nalog</h1>
+        <p>Dobrodošao/la! Popuni podatke za registraciju.</p>
+      </div>
+  
+      <!-- Error Message -->
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+  
+      <!-- Register Form -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Name Input -->
+        <div class="form-group">
+          <label for="name">Ime</label>
+          <input 
+            type="text" 
+            id="name" 
+            formControlName="name"
+            placeholder="Unesi svoje ime"
+            [class.invalid]="f['name'].invalid && f['name'].touched"
+          />
+          <div class="error" *ngIf="f['name'].invalid && f['name'].touched">
+            <span *ngIf="f['name'].errors?.['required']">Ime je obavezno</span>
+            <span *ngIf="f['name'].errors?.['minlength']">Ime mora imati najmanje 2 karaktera</span>
+          </div>
+        </div>
+  
+        <!-- Email Input -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email"
+            placeholder="ime@example.com"
+            [class.invalid]="f['email'].invalid && f['email'].touched"
+          />
+          <div class="error" *ngIf="f['email'].invalid && f['email'].touched">
+            <span *ngIf="f['email'].errors?.['required']">Email je obavezan</span>
+            <span *ngIf="f['email'].errors?.['email']">Unesite ispravan email</span>
+          </div>
+        </div>
+  
+        <!-- Password Input -->
+        <div class="form-group">
+          <label for="password">Lozinka</label>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password"
+            placeholder="Najmanje 6 karaktera"
+            [class.invalid]="f['password'].invalid && f['password'].touched"
+          />
+          <div class="error" *ngIf="f['password'].invalid && f['password'].touched">
+            <span *ngIf="f['password'].errors?.['required']">Lozinka je obavezna</span>
+            <span *ngIf="f['password'].errors?.['minlength']">Lozinka mora imati najmanje 6 karaktera</span>
+          </div>
+        </div>
+  
+        <!-- Theme Selection -->
+        <div class="form-group">
+          <label>Izaberi Temu</label>
+          <div class="theme-selector">
+            <div 
+              *ngFor="let theme of availableThemes" 
+              class="theme-option"
+              [class.selected]="registerForm.value.theme === theme"
+              (click)="registerForm.patchValue({theme: theme}); onThemeChange(theme)"
+            >
+              <div class="theme-preview theme-{{ theme }}">
+                <div class="theme-color-1"></div>
+                <div class="theme-color-2"></div>
+                <div class="theme-color-3"></div>
+              </div>
+              <span class="theme-name">{{ theme | titlecase }}</span>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Submit Button -->
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">Registruj se</span>
+          <span *ngIf="isLoading">Učitavanje...</span>
+        </button>
+  
+      </form>
+  
+      <!-- Link to Login -->
+      <div class="auth-footer">
+        <p>Već imaš nalog? <a routerLink="/login">Prijavi se</a></p>
+      </div>
+    </div>
+  </div>

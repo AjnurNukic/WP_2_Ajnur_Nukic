@@ -1,0 +1,314 @@
+<div class="tracker-wrapper">
+  <header class="tracker-header">
+    <button class="btn-back" (click)="goBack()">← Nazad</button>
+    <h1>📝 Daily Reflection</h1>
+    <button class="btn-add" (click)="showForm = !showForm">
+      {{ showForm ? 'Otkaži' : '+ Nova Refleksija' }}
+    </button>
+  </header>
+
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-info">
+        <h3>{{ getAverageRating() }}</h3>
+        <p>Prosečna ocena</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-info">
+        <h3>{{ getGoalsAchievedCount() }}</h3>
+        <p>Postignuti ciljevi</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📖</div>
+      <div class="stat-info">
+        <h3>{{ reflectionEntries.length }}</h3>
+        <p>Ukupno refleksija</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="add-form" *ngIf="showForm">
+    <form [formGroup]="reflectionForm" (ngSubmit)="addReflectionEntry()">
+      <div class="form-container">
+        
+        <!-- Datum i Vreme -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>📅 Datum</label>
+            <input type="date" formControlName="date" />
+          </div>
+          <div class="form-group">
+            <label>🕐 Vreme</label>
+            <input type="time" formControlName="time" />
+          </div>
+        </div>
+
+        <!-- Ocena Dana -->
+        <div class="form-group">
+          <label>⭐ Ocena dana (1-10): {{ reflectionForm.get('rating')?.value }}</label>
+          <input 
+            type="range" 
+            formControlName="rating" 
+            min="1" 
+            max="10" 
+            class="rating-slider"
+          />
+          <div class="rating-labels">
+            <span>1</span>
+            <span>5</span>
+            <span>10</span>
+          </div>
+        </div>
+
+        <!-- Kategorija -->
+        <div class="form-group">
+          <label>📊 Kategorija</label>
+          <div class="category-selector">
+            <label 
+              class="category-option" 
+              *ngFor="let cat of categories"
+              [style.border-color]="reflectionForm.get('category')?.value === cat.value ? cat.color : '#e5e7eb'"
+            >
+              <input 
+                type="radio" 
+                formControlName="category" 
+                [value]="cat.value"
+              />
+              <span class="category-icon">{{ cat.icon }}</span>
+              <span class="category-label">{{ cat.label }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Mood -->
+        <div class="form-group">
+          <label>😊 Kako se osjećaš?</label>
+          <div class="mood-selector">
+            <label class="mood-option" *ngFor="let m of ['amazing', 'good', 'okay', 'rough']">
+              <input 
+                type="radio" 
+                formControlName="mood" 
+                [value]="m"
+              />
+              <span class="mood-emoji">{{ getMoodEmoji(m) }}</span>
+              <span class="mood-label">{{ getMoodName(m) }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Pitanja za razmišljanje -->
+        <div class="form-group">
+          <label>💭 Šta sam danas naučio?</label>
+          <textarea 
+            formControlName="whatLearned" 
+            rows="3"
+            placeholder="Opiši nove spoznaje, vještine ili iskustva..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>🔄 Šta bih sutra uradio drugačije?</label>
+          <textarea 
+            formControlName="whatToDoDifferently" 
+            rows="3"
+            placeholder="Razmisli o poboljšanjima i promjenama..."
+          ></textarea>
+        </div>
+
+        <!-- Ciljevi -->
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="goalsAchieved" />
+            <span>🎯 Postigao/la sam svoje dnevne ciljeve</span>
+          </label>
+        </div>
+
+        <div class="form-group" *ngIf="reflectionForm.get('goalsAchieved')?.value">
+          <label>Opis postignuća</label>
+          <textarea 
+            formControlName="goalsDescription" 
+            rows="2"
+            placeholder="Opiši koje si ciljeve postigao..."
+          ></textarea>
+        </div>
+
+        <!-- Wins -->
+        <div class="form-group">
+          <label>🏆 Pobede dana</label>
+          <div class="items-list">
+            <div *ngFor="let win of wins.controls; let i = index" class="item-input-group">
+              <input 
+                type="text" 
+                [formControl]="$any(win)" 
+                [placeholder]="'Pobeda ' + (i + 1)"
+                class="item-input"
+              />
+              <button 
+                type="button" 
+                class="btn-remove-item" 
+                (click)="removeWin(i)"
+                *ngIf="wins.length > 1"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+          <button 
+            type="button" 
+            class="btn-add-item" 
+            (click)="addWin()"
+            *ngIf="wins.length < 5"
+          >
+            ➕ Dodaj još pobedu
+          </button>
+        </div>
+
+        <!-- Lessons -->
+        <div class="form-group">
+          <label>📚 Lekcije dana</label>
+          <div class="items-list">
+            <div *ngFor="let lesson of lessons.controls; let i = index" class="item-input-group">
+              <input 
+                type="text" 
+                [formControl]="$any(lesson)" 
+                [placeholder]="'Lekcija ' + (i + 1)"
+                class="item-input"
+              />
+              <button 
+                type="button" 
+                class="btn-remove-item" 
+                (click)="removeLesson(i)"
+                *ngIf="lessons.length > 1"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+          <button 
+            type="button" 
+            class="btn-add-item" 
+            (click)="addLesson()"
+            *ngIf="lessons.length < 5"
+          >
+            ➕ Dodaj još lekciju
+          </button>
+        </div>
+
+        <!-- Slobodna forma -->
+        <div class="form-group">
+          <label>✨ Slobodne misli</label>
+          <textarea 
+            formControlName="freeThoughts" 
+            rows="5"
+            placeholder="Bilo šta što želiš da zapamtiš o ovom danu..."
+          ></textarea>
+        </div>
+
+        <!-- Boja -->
+        <div class="form-group">
+          <label>🎨 Boja refleksije</label>
+          <div class="color-picker">
+            <button
+              type="button"
+              *ngFor="let color of colors"
+              class="color-btn"
+              [class.selected]="selectedColor === color.value"
+              [style.background]="color.value"
+              (click)="selectedColor = color.value"
+              [title]="color.name"
+            >
+              <span class="color-emoji">{{ color.emoji }}</span>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="reflectionForm.invalid">
+          💾 Sačuvaj refleksiju
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Učitavanje...</p>
+  </div>
+
+  <div class="entries-container" *ngIf="!isLoading">
+    <div class="empty-state" *ngIf="reflectionEntries.length === 0">
+      <div class="empty-icon">📝</div>
+      <h2>Nema refleksija</h2>
+      <p>Započni svoj dnevnik razmišljanja!</p>
+    </div>
+
+    <div class="entries-grid" *ngIf="reflectionEntries.length > 0">
+      <div 
+        *ngFor="let entry of reflectionEntries" 
+        class="reflection-card"
+        [style.border-left-color]="entry.color"
+      >
+        <div class="card-header" [style.background]="entry.color + '15'">
+          <div class="card-info">
+            <div class="card-date">
+              <span class="date-text">{{ formatDate(entry.date) }}</span>
+              <span class="time-text">{{ entry.time }}</span>
+            </div>
+            <div class="card-meta">
+              <span class="category-badge" [style.background]="getCategoryInfo(entry.category).color">
+                {{ getCategoryInfo(entry.category).icon }} {{ getCategoryInfo(entry.category).label }}
+              </span>
+              <span class="mood-badge">{{ getMoodEmoji(entry.mood) }}</span>
+              <span class="rating-badge">⭐ {{ entry.rating }}/10</span>
+            </div>
+          </div>
+          <button class="btn-delete" (click)="deleteReflectionEntry(entry.id)">🗑️</button>
+        </div>
+
+        <div class="card-body">
+          
+          <div class="goals-badge" *ngIf="entry.goalsAchieved">
+            🎯 Ciljevi postignuti
+          </div>
+
+          <div class="reflection-section">
+            <h4>💭 Šta sam naučio</h4>
+            <p>{{ entry.whatLearned }}</p>
+          </div>
+
+          <div class="reflection-section">
+            <h4>🔄 Šta bih uradio drugačije</h4>
+            <p>{{ entry.whatToDoDifferently }}</p>
+          </div>
+
+          <div class="reflection-section" *ngIf="entry.goalsDescription">
+            <h4>🎯 Postignuti ciljevi</h4>
+            <p>{{ entry.goalsDescription }}</p>
+          </div>
+
+          <div class="reflection-section">
+            <h4>🏆 Pobede</h4>
+            <ul class="wins-list">
+              <li *ngFor="let win of entry.wins">{{ win }}</li>
+            </ul>
+          </div>
+
+          <div class="reflection-section">
+            <h4>📚 Lekcije</h4>
+            <ul class="lessons-list">
+              <li *ngFor="let lesson of entry.lessons">{{ lesson }}</li>
+            </ul>
+          </div>
+
+          <div class="reflection-section highlight">
+            <h4>✨ Slobodne misli</h4>
+            <p>{{ entry.freeThoughts }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

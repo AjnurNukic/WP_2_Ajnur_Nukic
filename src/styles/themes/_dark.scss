@@ -1,0 +1,30 @@
+// src/styles/themes/_dark.scss
+
+.theme-dark {
+    --primary: #8b5cf6;
+    --primary-dark: #7c3aed;
+    --primary-light: #a78bfa;
+    
+    --secondary: #06b6d4;
+    --secondary-dark: #0891b2;
+    --secondary-light: #22d3ee;
+    
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    
+    --success: #22c55e;
+    --warning: #fbbf24;
+    --error: #f87171;
+    --info: #38bdf8;
+    
+    --accent: #f472b6;
+    --accent-light: #f9a8d4;
+  }

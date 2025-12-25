@@ -1,0 +1,54 @@
+<div class="dashboard-wrapper">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1>Personal Life Dashboard</h1>
+        <p>Dobrodošao/la, <strong>{{ userName }}</strong>! 👋</p>
+      </div>
+      <div class="header-right">
+        <button class="btn-icon" routerLink="/statistics" title="Statistika">
+          📊
+        </button>
+        <button class="btn-icon" routerLink="/fun-zone" title="Fun Zone">
+          🎮
+        </button>
+        <button class="btn-logout" (click)="logout()">
+          Odjavi se
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <div class="container">
+      
+      <!-- Welcome Card -->
+      <div class="welcome-card">
+        <h2>🎯 Izaberi Tracker</h2>
+        <p>Klikni na karticu da bi započeo praćenje svojih aktivnosti</p>
+      </div>
+
+      <!-- Tracker Grid -->
+      <div class="tracker-grid">
+        <div 
+          *ngFor="let tracker of trackers" 
+          class="tracker-card"
+          [class.disabled]="!tracker.enabled"
+          (click)="tracker.enabled && goToTracker(tracker.route)"
+          [style.--card-color]="tracker.color"
+        >
+          <div class="card-icon">{{ tracker.icon }}</div>
+          <h3>{{ tracker.title }}</h3>
+          <p>{{ tracker.description }}</p>
+          <div class="card-footer">
+            <span class="badge" *ngIf="tracker.enabled">Aktivan</span>
+            <span class="badge disabled" *ngIf="!tracker.enabled">Uskoro</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

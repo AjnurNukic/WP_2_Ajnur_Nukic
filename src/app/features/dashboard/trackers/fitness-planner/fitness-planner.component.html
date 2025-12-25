@@ -1,0 +1,108 @@
+<div class="tracker-wrapper">
+    <header class="tracker-header">
+      <button class="btn-back" (click)="goBack()">← Nazad</button>
+      <h1>💪 Fitness Planner</h1>
+      <button class="btn-add" (click)="showForm = !showForm">
+        {{ showForm ? 'Otkaži' : '+ Dodaj Trening' }}
+      </button>
+    </header>
+  
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-info">
+          <h3>{{ getTotalMinutes() }} min</h3>
+          <p>Ukupno minuta</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-info">
+          <h3>{{ getTotalCalories() }}</h3>
+          <p>Kalorija</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <h3>{{ fitnessEntries.length }}</h3>
+          <p>Treninga</p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="add-form" *ngIf="showForm">
+      <form [formGroup]="fitnessForm" (ngSubmit)="addFitnessEntry()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Datum</label>
+            <input type="date" formControlName="date" />
+          </div>
+          <div class="form-group">
+            <label>Vježba</label>
+            <input type="text" formControlName="exercise" placeholder="npr. Trčanje" />
+          </div>
+          <div class="form-group">
+            <label>Tip</label>
+            <select formControlName="type">
+              <option value="cardio">🏃 Kardio</option>
+              <option value="strength">🏋️ Snaga</option>
+              <option value="flexibility">🧘 Fleksibilnost</option>
+              <option value="sports">⚽ Sport</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Trajanje (min)</label>
+            <input type="number" formControlName="duration" min="1" />
+          </div>
+          <div class="form-group">
+            <label>Kalorije</label>
+            <input type="number" formControlName="calories" min="0" />
+          </div>
+          <div class="form-group full-width">
+            <label>Bilješke</label>
+            <textarea formControlName="notes" rows="3" placeholder="Kako je bilo..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit" [disabled]="fitnessForm.invalid">
+            💾 Sačuvaj
+          </button>
+        </div>
+      </form>
+    </div>
+  
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Učitavanje...</p>
+    </div>
+  
+    <div class="entries-container" *ngIf="!isLoading">
+      <div class="empty-state" *ngIf="fitnessEntries.length === 0">
+        <div class="empty-icon">💪</div>
+        <h2>Nemaš još treninga</h2>
+        <p>Dodaj prvi trening!</p>
+      </div>
+  
+      <div class="entries-list" *ngIf="fitnessEntries.length > 0">
+        <div *ngFor="let entry of fitnessEntries" class="entry-card">
+          <div class="entry-header">
+            <div class="entry-date">
+              <span class="type-icon">{{ getTypeIcon(entry.type) }}</span>
+              <span>{{ formatDate(entry.date) }}</span>
+            </div>
+            <button class="btn-delete" (click)="deleteFitnessEntry(entry.id)">🗑️</button>
+          </div>
+          <div class="entry-body">
+            <h3>{{ entry.exercise }}</h3>
+            <div class="entry-stats">
+              <span class="badge">{{ entry.duration }} min</span>
+              <span class="badge calories">{{ entry.calories }} kcal</span>
+              <span class="badge type">{{ getTypeName(entry.type) }}</span>
+            </div>
+          </div>
+          <div class="entry-notes" *ngIf="entry.notes">
+            <strong>Bilješke:</strong> {{ entry.notes }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

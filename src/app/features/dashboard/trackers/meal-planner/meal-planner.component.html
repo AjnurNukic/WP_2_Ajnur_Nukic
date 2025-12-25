@@ -1,0 +1,125 @@
+<div class="tracker-wrapper">
+    <header class="tracker-header">
+      <button class="btn-back" (click)="goBack()">← Nazad</button>
+      <h1>🍽️ Meal Planner</h1>
+      <button class="btn-add" (click)="showForm = !showForm">
+        {{ showForm ? 'Otkaži' : '+ Dodaj Plan' }}
+      </button>
+    </header>
+  
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-info">
+          <h3>{{ getAverageCalories() }}</h3>
+          <p>Prosječno kalorija/dan</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <h3>{{ getTotalCalories() }}</h3>
+          <p>Ukupno kalorija</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+          <h3>{{ mealEntries.length }}</h3>
+          <p>Dana evidentirano</p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="add-form" *ngIf="showForm">
+      <form [formGroup]="mealForm" (ngSubmit)="addMealEntry()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Datum</label>
+            <input type="date" formControlName="date" />
+          </div>
+          <div class="form-group">
+            <label>🥐 Doručak</label>
+            <input type="text" formControlName="breakfast" placeholder="npr. Ovsene pahuljice" />
+          </div>
+          <div class="form-group">
+            <label>🍝 Ručak</label>
+            <input type="text" formControlName="lunch" placeholder="npr. Piletina sa povrćem" />
+          </div>
+          <div class="form-group">
+            <label>🍲 Večera</label>
+            <input type="text" formControlName="dinner" placeholder="npr. Riba sa salatom" />
+          </div>
+          <div class="form-group">
+            <label>🍎 Užina</label>
+            <input type="text" formControlName="snacks" placeholder="Voće, orasi..." />
+          </div>
+          <div class="form-group">
+            <label>Kalorije (ukupno)</label>
+            <input type="number" formControlName="calories" min="0" placeholder="2000" />
+          </div>
+          <div class="form-group full-width">
+            <label>Bilješke</label>
+            <textarea formControlName="notes" rows="3" placeholder="Dodatne informacije..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit" [disabled]="mealForm.invalid">
+            💾 Sačuvaj
+          </button>
+        </div>
+      </form>
+    </div>
+  
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Učitavanje...</p>
+    </div>
+  
+    <div class="entries-container" *ngIf="!isLoading">
+      <div class="empty-state" *ngIf="mealEntries.length === 0">
+        <div class="empty-icon">🍽️</div>
+        <h2>Nema planiranih obroka</h2>
+        <p>Dodaj prvi meal plan!</p>
+      </div>
+  
+      <div class="entries-list" *ngIf="mealEntries.length > 0">
+        <div *ngFor="let entry of mealEntries" class="entry-card">
+          <div class="entry-header">
+            <div class="entry-date">
+              <span class="date-icon">📅</span>
+              <span>{{ formatDate(entry.date) }}</span>
+            </div>
+            <button class="btn-delete" (click)="deleteMealEntry(entry.id)">🗑️</button>
+          </div>
+  
+          <div class="meals-grid">
+            <div class="meal-item">
+              <div class="meal-label">🥐 Doručak</div>
+              <div class="meal-content">{{ entry.breakfast }}</div>
+            </div>
+            <div class="meal-item">
+              <div class="meal-label">🍝 Ručak</div>
+              <div class="meal-content">{{ entry.lunch }}</div>
+            </div>
+            <div class="meal-item">
+              <div class="meal-label">🍲 Večera</div>
+              <div class="meal-content">{{ entry.dinner }}</div>
+            </div>
+            <div class="meal-item" *ngIf="entry.snacks">
+              <div class="meal-label">🍎 Užina</div>
+              <div class="meal-content">{{ entry.snacks }}</div>
+            </div>
+          </div>
+  
+          <div class="entry-footer">
+            <div class="calories-badge" *ngIf="entry.calories > 0">
+              🔥 {{ entry.calories }} kcal
+            </div>
+          </div>
+  
+          <div class="entry-notes" *ngIf="entry.notes">
+            <strong>Bilješke:</strong> {{ entry.notes }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

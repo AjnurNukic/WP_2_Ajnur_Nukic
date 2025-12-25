@@ -1,0 +1,30 @@
+// src/styles/themes/_green.scss
+
+.theme-green {
+    --primary: #10b981;
+    --primary-dark: #059669;
+    --primary-light: #34d399;
+    
+    --secondary: #6366f1;
+    --secondary-dark: #4f46e5;
+    --secondary-light: #818cf8;
+    
+    --bg-primary: #ffffff;
+    --bg-secondary: #f3f4f6;
+    --bg-tertiary: #e5e7eb;
+    
+    --card-bg: #ffffff;
+    --card-border: #e5e7eb;
+    
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+    
+    --accent: #8b5cf6;
+    --accent-light: #a78bfa;
+  }

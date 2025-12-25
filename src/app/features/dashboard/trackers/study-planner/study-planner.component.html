@@ -1,0 +1,100 @@
+<div class="tracker-wrapper">
+    <header class="tracker-header">
+      <button class="btn-back" (click)="goBack()">← Nazad</button>
+      <h1>📚 Study Planner</h1>
+      <button class="btn-add" (click)="showForm = !showForm">
+        {{ showForm ? 'Otkaži' : '+ Dodaj Sesiju' }}
+      </button>
+    </header>
+  
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-info">
+          <h3>{{ getTotalHours() }}h</h3>
+          <p>Ukupno sati</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📖</div>
+        <div class="stat-info">
+          <h3>{{ getUniqueSubjects().length }}</h3>
+          <p>Predmeta</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <h3>{{ studyEntries.length }}</h3>
+          <p>Sesija</p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="add-form" *ngIf="showForm">
+      <form [formGroup]="studyForm" (ngSubmit)="addStudyEntry()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Datum</label>
+            <input type="date" formControlName="date" />
+          </div>
+          <div class="form-group">
+            <label>Predmet</label>
+            <input type="text" formControlName="subject" placeholder="npr. Matematika" />
+          </div>
+          <div class="form-group">
+            <label>Tema</label>
+            <input type="text" formControlName="topic" placeholder="npr. Integrali" />
+          </div>
+          <div class="form-group">
+            <label>Sati</label>
+            <input type="number" formControlName="hours" step="0.5" min="0.1" max="24" />
+          </div>
+          <div class="form-group full-width">
+            <label>Bilješke (opciono)</label>
+            <textarea formControlName="notes" rows="3" placeholder="Što si učio..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit" [disabled]="studyForm.invalid">
+            💾 Sačuvaj
+          </button>
+        </div>
+      </form>
+    </div>
+  
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Učitavanje...</p>
+    </div>
+  
+    <div class="entries-container" *ngIf="!isLoading">
+      <div class="empty-state" *ngIf="studyEntries.length === 0">
+        <div class="empty-icon">📚</div>
+        <h2>Nemaš još sesija</h2>
+        <p>Klikni na "Dodaj Sesiju" da evidenti raš učenje!</p>
+      </div>
+  
+      <div class="entries-list" *ngIf="studyEntries.length > 0">
+        <div *ngFor="let entry of studyEntries" class="entry-card">
+          <div class="entry-header">
+            <div class="entry-date">
+              <span class="date-icon">📅</span>
+              <span>{{ formatDate(entry.date) }}</span>
+            </div>
+            <button class="btn-delete" (click)="deleteStudyEntry(entry.id)">🗑️</button>
+          </div>
+          <div class="entry-body">
+            <div class="entry-subject">
+              <h3>{{ entry.subject }}</h3>
+              <p class="topic">{{ entry.topic }}</p>
+            </div>
+            <div class="entry-hours">
+              <span class="hours-badge">{{ entry.hours }}h</span>
+            </div>
+          </div>
+          <div class="entry-notes" *ngIf="entry.notes">
+            <strong>Bilješke:</strong> {{ entry.notes }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

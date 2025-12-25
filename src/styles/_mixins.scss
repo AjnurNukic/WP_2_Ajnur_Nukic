@@ -1,0 +1,35 @@
+// src/styles/_mixins.scss
+
+// Flexbox centering
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  // Card style
+  @mixin card {
+    background: var(--card-bg);
+    border-radius: $radius-lg;
+    padding: $spacing-md;
+    box-shadow: $shadow-md;
+    transition: transform $transition-base, box-shadow $transition-base;
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: $shadow-lg;
+    }
+  }
+  
+  // Responsive
+  @mixin tablet {
+    @media (max-width: 768px) {
+      @content;
+    }
+  }
+  
+  @mixin mobile {
+    @media (max-width: 480px) {
+      @content;
+    }
+  }

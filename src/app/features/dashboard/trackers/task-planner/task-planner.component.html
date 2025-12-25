@@ -1,0 +1,141 @@
+<div class="tracker-wrapper">
+    <header class="tracker-header">
+      <button class="btn-back" (click)="goBack()">← Nazad</button>
+      <h1>📋 Task Planner</h1>
+      <button class="btn-add" (click)="showForm = !showForm">
+        {{ showForm ? 'Otkaži' : '+ Dodaj Task' }}
+      </button>
+    </header>
+  
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <h3>{{ tasks.length }}</h3>
+          <p>Ukupno taskova</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-info">
+          <h3>{{ getPendingCount() }}</h3>
+          <p>Na čekanju</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <h3>{{ getCompletedCount() }}</h3>
+          <p>Završeno</p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="add-form" *ngIf="showForm">
+      <form [formGroup]="taskForm" (ngSubmit)="addTask()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Naslov</label>
+            <input type="text" formControlName="title" placeholder="npr. Završi projekat" />
+          </div>
+          <div class="form-group">
+            <label>Kategorija</label>
+            <input type="text" formControlName="category" placeholder="npr. Posao" />
+          </div>
+          <div class="form-group">
+            <label>Rok</label>
+            <input type="date" formControlName="dueDate" />
+          </div>
+          <div class="form-group">
+            <label>Prioritet</label>
+            <select formControlName="priority">
+              <option value="low">🟢 Nizak</option>
+              <option value="medium">🟡 Srednji</option>
+              <option value="high">🔴 Visok</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label>Opis</label>
+            <textarea formControlName="description" rows="3" placeholder="Detalji..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit" [disabled]="taskForm.invalid">
+            💾 Sačuvaj
+          </button>
+        </div>
+      </form>
+    </div>
+  
+    <div class="filter-tabs">
+      <button 
+        [class.active]="filterStatus === 'all'" 
+        (click)="filterStatus = 'all'"
+      >
+        Sve ({{ tasks.length }})
+      </button>
+      <button 
+        [class.active]="filterStatus === 'active'" 
+        (click)="filterStatus = 'active'"
+      >
+        Aktivno ({{ getPendingCount() }})
+      </button>
+      <button 
+        [class.active]="filterStatus === 'completed'" 
+        (click)="filterStatus = 'completed'"
+      >
+        Završeno ({{ getCompletedCount() }})
+      </button>
+    </div>
+  
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Učitavanje...</p>
+    </div>
+  
+    <div class="tasks-container" *ngIf="!isLoading">
+      <div class="empty-state" *ngIf="filteredTasks.length === 0">
+        <div class="empty-icon">📋</div>
+        <h2>Nema taskova</h2>
+        <p>Dodaj prvi task!</p>
+      </div>
+  
+      <div class="tasks-list" *ngIf="filteredTasks.length > 0">
+        <div 
+          *ngFor="let task of filteredTasks" 
+          class="task-card"
+          [class.completed]="task.completed"
+          [class.overdue]="isOverdue(task)"
+        >
+          <div class="task-checkbox">
+            <input 
+              type="checkbox" 
+              [checked]="task.completed"
+              (change)="toggleComplete(task)"
+              [id]="'task-' + task.id"
+            />
+            <label [for]="'task-' + task.id"></label>
+          </div>
+  
+          <div class="task-content">
+            <div class="task-header">
+              <h3 [class.strikethrough]="task.completed">{{ task.title }}</h3>
+              <div class="task-meta">
+                <span class="priority-badge">
+                  {{ getPriorityIcon(task.priority) }} {{ getPriorityName(task.priority) }}
+                </span>
+                <span class="category-badge">{{ task.category }}</span>
+              </div>
+            </div>
+  
+            <p class="task-description" *ngIf="task.description">{{ task.description }}</p>
+  
+            <div class="task-footer">
+              <span class="due-date" [class.overdue]="isOverdue(task)">
+                📅 {{ formatDate(task.dueDate) }}
+              </span>
+              <button class="btn-delete" (click)="deleteTask(task.id)">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
