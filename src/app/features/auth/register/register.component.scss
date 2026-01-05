@@ -90,7 +90,7 @@
     }
   }
   
-  // Theme Selector
+
   .theme-selector {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -149,13 +149,7 @@
     .theme-color-2 { background: #06b6d4; }
     .theme-color-3 { background: #1e293b; }
   }
-  
-  .theme-cyberpunk {
-    .theme-color-1 { background: #ff00ff; }
-    .theme-color-2 { background: #00ffff; }
-    .theme-color-3 { background: #0a0e27; }
-  }
-  
+ 
   .theme-name {
     font-size: 0.9rem;
     font-weight: 600;

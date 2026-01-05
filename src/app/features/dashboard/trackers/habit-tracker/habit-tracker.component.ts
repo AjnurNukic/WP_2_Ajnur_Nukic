@@ -33,9 +33,7 @@ export class HabitTrackerComponent implements OnInit {
     await this.loadHabits();
   }
 
-  /**
-   * Učitaj sve navike
-   */
+
   async loadHabits() {
     this.isLoading = true;
     try {
@@ -47,9 +45,7 @@ export class HabitTrackerComponent implements OnInit {
     }
   }
 
-  /**
-   * Dodaj novu naviku
-   */
+
   async addHabit() {
     if (this.habitForm.invalid) return;
 
@@ -72,9 +68,7 @@ export class HabitTrackerComponent implements OnInit {
     }
   }
 
-  /**
-   * Označi naviku kao kompletiranu
-   */
+
   async toggleComplete(habit: HabitEntry) {
     if (!habit.id) return;
 
@@ -86,9 +80,7 @@ export class HabitTrackerComponent implements OnInit {
     }
   }
 
-  /**
-   * Obriši naviku
-   */
+
   async deleteHabit(habitId: string | undefined) {
     if (!habitId) return;
     
@@ -102,18 +94,14 @@ export class HabitTrackerComponent implements OnInit {
     }
   }
 
-  /**
-   * Da li je navika kompletirana danas
-   */
+
   isCompletedToday(habit: HabitEntry): boolean {
     const today = new Date().toISOString().split('T')[0];
     return habit.completedDates.includes(today);
   }
 
-  /**
-   * Nazad na dashboard
-   */
+
   goBack() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/dashboard/trackers']);
   }
 }

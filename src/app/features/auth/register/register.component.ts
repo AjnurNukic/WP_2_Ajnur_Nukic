@@ -24,28 +24,19 @@ export class RegisterComponent {
   private router = inject(Router);
 
   constructor() {
-    // Inicijalizuj formu
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       theme: ['green', Validators.required]
     });
-
-    // Učitaj dostupne teme
     this.availableThemes = this.themeService.getAvailableThemes();
   }
 
-  /**
-   * Preview teme dok korisnik bira
-   */
   onThemeChange(theme: Theme): void {
     this.themeService.setTheme(theme);
   }
 
-  /**
-   * Submit registracije
-   */
   async onSubmit(): Promise<void> {
     if (this.registerForm.invalid) {
       this.markFormAsTouched();
@@ -59,25 +50,19 @@ export class RegisterComponent {
 
     try {
       await this.authService.register(name, email, password, theme);
-      // AuthService automatski redirektuje na dashboard
     } catch (error: any) {
       this.errorMessage = error.message;
       this.isLoading = false;
     }
   }
 
-  /**
-   * Označi sva polja kao touched (da se prikažu greške)
-   */
   private markFormAsTouched(): void {
     Object.keys(this.registerForm.controls).forEach(key => {
       this.registerForm.get(key)?.markAsTouched();
     });
   }
 
-  /**
-   * Helper za pristup form kontrolama u template-u
-   */
+
   get f() {
     return this.registerForm.controls;
   }

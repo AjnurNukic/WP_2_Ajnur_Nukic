@@ -1,0 +1,109 @@
+<div class="whiteboard-container">
+
+  <div class="toolbar">
+            <button class="back-button" routerLink="/fun-zone">
+      ← Nazad
+    </button>
+
+    <div class="toolbar-section">
+      <h3>Alati</h3>
+      <div class="tool-buttons">
+        <button 
+          [class.active]="selectedTool === 'pen'"
+          (click)="selectTool('pen')"
+          class="tool-btn"
+          title="Olovka">
+          <i class="icon">✏️</i>
+          <span>Olovka</span>
+        </button>
+        <button 
+          [class.active]="selectedTool === 'eraser'"
+          (click)="selectTool('eraser')"
+          class="tool-btn"
+          title="Gumica">
+          <i class="icon">🧹</i>
+          <span>Gumica</span>
+        </button>
+      </div>
+    </div>
+
+
+    <div class="toolbar-section" *ngIf="selectedTool === 'pen'">
+      <h3>Boje</h3>
+      <div class="color-palette">
+        <button
+          *ngFor="let color of colors"
+          [style.background-color]="color"
+          [class.active]="selectedColor === color"
+          (click)="selectColor(color)"
+          class="color-btn"
+          [title]="color">
+        </button>
+      </div>
+    </div>
+
+
+    <div class="toolbar-section" *ngIf="selectedTool === 'pen'">
+      <h3>Veličina olovke</h3>
+      <div class="size-buttons">
+        <button
+          *ngFor="let size of penSizes"
+          [class.active]="penSize === size"
+          (click)="selectPenSize(size)"
+          class="size-btn">
+          <div class="size-preview" [style.width.px]="size * 3" [style.height.px]="size * 3"></div>
+          <span>{{ size }}px</span>
+        </button>
+      </div>
+    </div>
+
+
+    <div class="toolbar-section" *ngIf="selectedTool === 'eraser'">
+      <h3>Veličina gumice</h3>
+      <div class="size-buttons">
+        <button
+          *ngFor="let size of eraserSizes"
+          [class.active]="eraserSize === size"
+          (click)="selectEraserSize(size)"
+          class="size-btn">
+          <div class="size-preview eraser-preview" [style.width.px]="size" [style.height.px]="size"></div>
+          <span>{{ size }}px</span>
+        </button>
+      </div>
+    </div>
+
+
+    <div class="toolbar-section">
+      <h3>Akcije</h3>
+      <div class="action-buttons">
+        <button (click)="undo()" class="action-btn" title="Vrati">
+          <i class="icon">↶</i>
+          <span>Vrati</span>
+        </button>
+        <button (click)="redo()" class="action-btn" title="Ponovi">
+          <i class="icon">↷</i>
+          <span>Ponovi</span>
+        </button>
+        <button (click)="clearCanvas()" class="action-btn danger" title="Obriši sve">
+          <i class="icon">🗑️</i>
+          <span>Obriši sve</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+<div class="canvas-wrapper">
+  <canvas 
+    #canvas
+    (mousedown)="onMouseDown($event)"
+    (mousemove)="onMouseMove($event)"
+    (mouseup)="onMouseUp()"
+    (mouseleave)="onMouseUp(); onCanvasMouseLeave()"
+    (mouseenter)="onCanvasMouseEnter()"
+    [class.eraser-cursor]="selectedTool === 'eraser'">
+  </canvas>
+  
+
+  <div id="eraser-cursor" class="eraser-cursor-circle" *ngIf="selectedTool === 'eraser'"></div>
+</div>
+</div>

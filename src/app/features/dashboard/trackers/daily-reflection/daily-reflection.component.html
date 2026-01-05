@@ -1,18 +1,21 @@
 <div class="tracker-wrapper">
   <header class="tracker-header">
     <button class="btn-back" (click)="goBack()">← Nazad</button>
-    <h1>📝 Daily Reflection</h1>
+    <h1>📝 Dnevna refleksija</h1>
     <button class="btn-add" (click)="showForm = !showForm">
-      {{ showForm ? 'Otkaži' : '+ Nova Refleksija' }}
+      {{ showForm ? 'Otkaži' : '+ Nova refleksija' }}
     </button>
   </header>
+
+<div class="tracker-content">
+
 
   <div class="stats-container">
     <div class="stat-card">
       <div class="stat-icon">📊</div>
       <div class="stat-info">
         <h3>{{ getAverageRating() }}</h3>
-        <p>Prosečna ocena</p>
+        <p>Prosječna ocjena</p>
       </div>
     </div>
     <div class="stat-card">
@@ -35,21 +38,19 @@
     <form [formGroup]="reflectionForm" (ngSubmit)="addReflectionEntry()">
       <div class="form-container">
         
-        <!-- Datum i Vreme -->
         <div class="form-row">
           <div class="form-group">
             <label>📅 Datum</label>
             <input type="date" formControlName="date" />
           </div>
           <div class="form-group">
-            <label>🕐 Vreme</label>
+            <label>🕐 Vrijeme</label>
             <input type="time" formControlName="time" />
           </div>
         </div>
 
-        <!-- Ocena Dana -->
         <div class="form-group">
-          <label>⭐ Ocena dana (1-10): {{ reflectionForm.get('rating')?.value }}</label>
+          <label>⭐ Ocjena dana (1-10): {{ reflectionForm.get('rating')?.value }}</label>
           <input 
             type="range" 
             formControlName="rating" 
@@ -64,14 +65,12 @@
           </div>
         </div>
 
-        <!-- Kategorija -->
         <div class="form-group">
           <label>📊 Kategorija</label>
           <div class="category-selector">
             <label 
               class="category-option" 
               *ngFor="let cat of categories"
-              [style.border-color]="reflectionForm.get('category')?.value === cat.value ? cat.color : '#e5e7eb'"
             >
               <input 
                 type="radio" 
@@ -84,7 +83,6 @@
           </div>
         </div>
 
-        <!-- Mood -->
         <div class="form-group">
           <label>😊 Kako se osjećaš?</label>
           <div class="mood-selector">
@@ -100,7 +98,6 @@
           </div>
         </div>
 
-        <!-- Pitanja za razmišljanje -->
         <div class="form-group">
           <label>💭 Šta sam danas naučio?</label>
           <textarea 
@@ -119,7 +116,6 @@
           ></textarea>
         </div>
 
-        <!-- Ciljevi -->
         <div class="form-group">
           <label class="checkbox-label">
             <input type="checkbox" formControlName="goalsAchieved" />
@@ -136,15 +132,14 @@
           ></textarea>
         </div>
 
-        <!-- Wins -->
         <div class="form-group">
-          <label>🏆 Pobede dana</label>
+          <label>🏆 Pobjede dana</label>
           <div class="items-list">
             <div *ngFor="let win of wins.controls; let i = index" class="item-input-group">
               <input 
                 type="text" 
                 [formControl]="$any(win)" 
-                [placeholder]="'Pobeda ' + (i + 1)"
+                [placeholder]="'Pobjeda ' + (i + 1)"
                 class="item-input"
               />
               <button 
@@ -163,11 +158,10 @@
             (click)="addWin()"
             *ngIf="wins.length < 5"
           >
-            ➕ Dodaj još pobedu
+            ➕ Dodaj još pobjedu
           </button>
         </div>
 
-        <!-- Lessons -->
         <div class="form-group">
           <label>📚 Lekcije dana</label>
           <div class="items-list">
@@ -198,7 +192,6 @@
           </button>
         </div>
 
-        <!-- Slobodna forma -->
         <div class="form-group">
           <label>✨ Slobodne misli</label>
           <textarea 
@@ -206,24 +199,6 @@
             rows="5"
             placeholder="Bilo šta što želiš da zapamtiš o ovom danu..."
           ></textarea>
-        </div>
-
-        <!-- Boja -->
-        <div class="form-group">
-          <label>🎨 Boja refleksije</label>
-          <div class="color-picker">
-            <button
-              type="button"
-              *ngFor="let color of colors"
-              class="color-btn"
-              [class.selected]="selectedColor === color.value"
-              [style.background]="color.value"
-              (click)="selectedColor = color.value"
-              [title]="color.name"
-            >
-              <span class="color-emoji">{{ color.emoji }}</span>
-            </button>
-          </div>
         </div>
 
         <button type="submit" class="btn-submit" [disabled]="reflectionForm.invalid">
@@ -249,16 +224,15 @@
       <div 
         *ngFor="let entry of reflectionEntries" 
         class="reflection-card"
-        [style.border-left-color]="entry.color"
       >
-        <div class="card-header" [style.background]="entry.color + '15'">
+        <div class="card-header">
           <div class="card-info">
             <div class="card-date">
               <span class="date-text">{{ formatDate(entry.date) }}</span>
               <span class="time-text">{{ entry.time }}</span>
             </div>
             <div class="card-meta">
-              <span class="category-badge" [style.background]="getCategoryInfo(entry.category).color">
+              <span class="category-badge">
                 {{ getCategoryInfo(entry.category).icon }} {{ getCategoryInfo(entry.category).label }}
               </span>
               <span class="mood-badge">{{ getMoodEmoji(entry.mood) }}</span>
@@ -275,7 +249,7 @@
           </div>
 
           <div class="reflection-section">
-            <h4>💭 Šta sam naučio</h4>
+            <h4>💭 Šta sam danas naučio</h4>
             <p>{{ entry.whatLearned }}</p>
           </div>
 
@@ -290,7 +264,7 @@
           </div>
 
           <div class="reflection-section">
-            <h4>🏆 Pobede</h4>
+            <h4>🏆 Pobjede</h4>
             <ul class="wins-list">
               <li *ngFor="let win of entry.wins">{{ win }}</li>
             </ul>
@@ -311,4 +285,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>

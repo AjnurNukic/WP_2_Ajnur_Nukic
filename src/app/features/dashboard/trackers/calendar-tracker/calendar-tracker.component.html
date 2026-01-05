@@ -103,16 +103,8 @@
           [class.completed]="entry.completed"
           [class.today]="isToday(entry.date)"
           [class.past]="isPast(entry.date) && !entry.completed"
-          [style.border-left-color]="getTypeColor(entry.type)"
         >
-          <div class="entry-checkbox" *ngIf="entry.type === 'task'">
-            <input 
-              type="checkbox" 
-              [checked]="entry.completed"
-              (change)="toggleComplete(entry)"
-              [id]="'entry-' + entry.id"
-            />
-          </div>
+       
   
           <div class="entry-content">
             <div class="entry-header">

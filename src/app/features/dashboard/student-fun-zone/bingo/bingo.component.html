@@ -1,0 +1,24 @@
+<div class="bingo-wrapper">
+  <header class="bingo-header">
+    <button class="btn-back" (click)="goBack()">← Nazad</button>
+    <h1>📝BINGO</h1>
+    <button class="btn-reset" (click)="resetGame()">🔄 Nova kartica</button>
+  </header>
+
+  <div class="instructions">
+    <p>Pronađi osobu koja odgovara opisu i klikni na polje. Cilj je napraviti liniju!</p>
+  </div>
+
+  <div class="bingo-grid">
+    <div 
+      *ngFor="let item of bingoCard; let i = index" 
+      class="bingo-cell"
+      [class.marked]="markedCells[i]"
+      [class.free-space]="i === 12"
+      (click)="toggleCell(i)"
+    >
+      <span class="cell-text">{{ item }}</span>
+      <div class="checkmark" *ngIf="markedCells[i]">✓</div>
+    </div>
+  </div>
+</div>

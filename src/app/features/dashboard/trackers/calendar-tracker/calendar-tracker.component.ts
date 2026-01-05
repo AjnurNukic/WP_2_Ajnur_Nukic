@@ -177,6 +177,6 @@ export class CalendarTrackerComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/dashboard/trackers']);
   }
 }

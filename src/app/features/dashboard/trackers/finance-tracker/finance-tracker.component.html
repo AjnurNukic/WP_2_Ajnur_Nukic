@@ -1,5 +1,5 @@
 <div class="tracker-wrapper">
-    <!-- Header -->
+
     <header class="tracker-header">
       <button class="btn-back" (click)="goBack()">← Nazad</button>
       <h1>💰 Finance Tracker</h1>
@@ -8,7 +8,7 @@
       </button>
     </header>
   
-    <!-- Summary Cards -->
+
     <div class="summary-container">
       <div class="summary-card income">
         <div class="summary-icon">💰</div>
@@ -35,7 +35,7 @@
       </div>
     </div>
   
-    <!-- Add Form -->
+
     <div class="add-form" *ngIf="showForm">
       <form [formGroup]="financeForm" (ngSubmit)="addFinanceEntry()">
         <div class="form-grid">
@@ -99,7 +99,7 @@
       </form>
     </div>
   
-    <!-- Filter Tabs -->
+
     <div class="filters-container">
       <div class="filter-group">
         <label>Tip:</label>
@@ -156,7 +156,7 @@
       </div>
     </div>
   
-    <!-- Charts Section -->
+
     <div class="charts-container" *ngIf="!isLoading && financeEntries.length > 0">
       <div class="chart-card">
         <h3>📊 Rashodi po kategorijama</h3>
@@ -180,13 +180,13 @@
       </div>
     </div>
   
-    <!-- Loading State -->
+
     <div class="loading" *ngIf="isLoading">
       <div class="spinner"></div>
       <p>Učitavanje...</p>
     </div>
   
-    <!-- Transactions List -->
+
     <div class="transactions-container" *ngIf="!isLoading">
       <div class="empty-state" *ngIf="filteredEntries.length === 0">
         <div class="empty-icon">💰</div>

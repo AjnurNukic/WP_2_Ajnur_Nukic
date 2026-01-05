@@ -128,6 +128,6 @@ export class FitnessPlannerComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/dashboard/trackers']);
   }
 }

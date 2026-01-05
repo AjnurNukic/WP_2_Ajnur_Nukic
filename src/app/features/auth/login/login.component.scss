@@ -89,7 +89,41 @@
       margin-top: 0.5rem;
     }
   }
+   .theme-preview {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 0.5rem;
+    height: 40px;
   
+    div {
+      flex: 1;
+      border-radius: 4px;
+    }
+  }
+  
+  .theme-green {
+    .theme-color-1 { background: #10b981; }
+    .theme-color-2 { background: #6366f1; }
+    .theme-color-3 { background: #f3f4f6; }
+  }
+  
+  .theme-blue {
+    .theme-color-1 { background: #3b82f6; }
+    .theme-color-2 { background: #8b5cf6; }
+    .theme-color-3 { background: #eff6ff; }
+  }
+  
+  .theme-dark {
+    .theme-color-1 { background: #8b5cf6; }
+    .theme-color-2 { background: #06b6d4; }
+    .theme-color-3 { background: #1e293b; }
+  }
+ 
+  .theme-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
   .btn-primary {
     width: 100%;
     padding: 1rem;

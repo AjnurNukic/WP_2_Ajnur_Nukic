@@ -8,7 +8,7 @@ export interface TrackerCard {
   enabled: boolean;
 }
 
-/* ================= HABITS ================= */
+
 
 export interface HabitEntry {
   id?: string;
@@ -20,18 +20,18 @@ export interface HabitEntry {
   createdAt: Date;
 }
 
-/* ================= SLEEP ================= */
+
 
 export interface SleepEntry {
   id?: string;
   userId: string;
   date: Date;
   hours: number;
-  quality: number; // 1-5
+  quality: number; 
   notes: string;
 }
 
-/* ================= TASKS ================= */
+
 
 export interface TaskEntry {
   id?: string;
@@ -45,18 +45,18 @@ export interface TaskEntry {
   createdAt: Date;
 }
 
-/* ================= MOOD ================= */
+
 
 export interface MoodEntry {
   id?: string;
   userId: string;
   date: Date;
-  rating: number; // 1-10
+  rating: number; 
   emotions: string[];
   notes: string;
 }
 
-/* ================= STUDY ================= */
+
 
 export interface StudyEntry {
   id?: string;
@@ -68,17 +68,9 @@ export interface StudyEntry {
   notes: string;
 }
 
-/* ================= WATER ================= */
 
-export interface WaterEntry {
-  id?: string;
-  userId: string;
-  date: Date;
-  glasses: number;
-  goal: number;
-}
 
-/* ================= FITNESS ================= */
+
 
 export interface FitnessEntry {
   id?: string;
@@ -91,7 +83,7 @@ export interface FitnessEntry {
   notes: string;
 }
 
-/* ================= MEALS ================= */
+
 
 export interface MealEntry {
   id?: string;
@@ -105,7 +97,7 @@ export interface MealEntry {
   notes: string;
 }
 
-/* ================= FINANCE ================= */
+
 
 export interface FinanceEntry {
   id?: string;
@@ -118,7 +110,7 @@ export interface FinanceEntry {
   paymentMethod?: 'cash' | 'card' | 'transfer' | 'other';
 }
 
-/* ================= CALENDAR ================= */
+
 
 export interface CalendarEntry {
   id?: string;
@@ -131,7 +123,7 @@ export interface CalendarEntry {
   completed: boolean;
 }
 
-/* ================= GRATITUDE ================= */
+
 
 export interface GratitudeEntry {
   id?: string;
@@ -148,25 +140,51 @@ export interface ReflectionEntry {
   userId: string;
   date: Date;
   time: string;
-  rating: number; // 1-10
+  rating: number; 
   category: 'work' | 'personal' | 'health' | 'learning' | 'relationships';
   
-  // Pitanja za razmišljanje
+
   whatLearned: string;
   whatToDoDifferently: string;
   
-  // Ciljevi
+
   goalsAchieved: boolean;
   goalsDescription: string;
   
-  // Wins & Lessons
+
   wins: string[];
   lessons: string[];
   
-  // Slobodna forma
+
   freeThoughts: string;
   
-  // Vizuelno
+
   mood: 'amazing' | 'good' | 'okay' | 'rough';
   color: string;
+}
+export interface WaterEntry {
+  id?: string;
+  userId?: string;
+  date: Date;
+  glasses: number;
+  goal: number;
+}
+export interface QuizQuestion {
+  id: number;
+  question: string;
+  type: 'single' | 'multiple';
+  options: QuizOption[];
+  correctAnswers: string[];
+}
+
+export interface QuizOption {
+  value: string;
+  label: string;
+}
+
+export interface QuizResult {
+  score: number;
+  total: number;
+  percentage: number;
+  passed: boolean;
 }

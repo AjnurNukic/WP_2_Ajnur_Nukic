@@ -1,5 +1,5 @@
 <div class="tracker-wrapper">
-    <!-- Header -->
+
     <header class="tracker-header">
       <button class="btn-back" (click)="goBack()">
         ← Nazad
@@ -10,7 +10,7 @@
       </button>
     </header>
   
-    <!-- Stats Cards -->
+
     <div class="stats-container">
       <div class="stat-card">
         <div class="stat-icon">⏰</div>
@@ -35,7 +35,7 @@
       </div>
     </div>
   
-    <!-- Add Sleep Form -->
+
     <div class="add-form" *ngIf="showForm">
       <form [formGroup]="sleepForm" (ngSubmit)="addSleepEntry()">
         <div class="form-grid">
@@ -86,23 +86,23 @@
       </form>
     </div>
   
-    <!-- Loading State -->
+
     <div class="loading" *ngIf="isLoading">
       <div class="spinner"></div>
       <p>Učitavanje podataka...</p>
     </div>
   
-    <!-- Sleep Entries List -->
+
     <div class="entries-container" *ngIf="!isLoading">
       
-      <!-- Empty State -->
+
       <div class="empty-state" *ngIf="sleepEntries.length === 0">
         <div class="empty-icon">😴</div>
         <h2>Nemaš još zapisa</h2>
         <p>Klikni na "Dodaj Spavanje" da evidentiraš san!</p>
       </div>
   
-      <!-- Entries List -->
+
       <div class="entries-list" *ngIf="sleepEntries.length > 0">
         <div 
           *ngFor="let entry of sleepEntries" 

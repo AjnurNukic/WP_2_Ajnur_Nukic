@@ -32,26 +32,23 @@ export class AuthService {
   private firestore: Firestore = inject(Firestore);
   private router: Router = inject(Router);
 
-  // Observable trenutnog korisnika
+
   user$: Observable<User | null> = user(this.auth);
   currentUser: User | null = null;
 
   constructor() {
-    // Prati stanje korisnika
     this.user$.subscribe(user => {
       this.currentUser = user;
     });
   }
 
-  /**
-   * REGISTRACIJA novog korisnika
-   */
+
   async register(name: string, email: string, password: string, theme: string): Promise<void> {
     try {
-      // 1. Kreiraj Auth korisnika
+
       const credential = await createUserWithEmailAndPassword(this.auth, email, password);
       
-      // 2. Kreiraj profil u Firestore
+
       const userProfile: UserProfile = {
         uid: credential.user.uid,
         name: name,
@@ -63,10 +60,10 @@ export class AuthService {
       const userDocRef = doc(this.firestore, `users/${credential.user.uid}/profile/data`);
       await setDoc(userDocRef, userProfile);
 
-      // 3. Sačuvaj temu
+
       localStorage.setItem('userTheme', theme);
 
-      // 4. Preusmjeri na dashboard
+
       this.router.navigate(['/dashboard']);
     } catch (error: any) {
       console.error('Registration error:', error);
@@ -74,14 +71,12 @@ export class AuthService {
     }
   }
 
-  /**
-   * LOGIN postojećeg korisnika
-   */
+
   async login(email: string, password: string): Promise<void> {
     try {
       const credential = await signInWithEmailAndPassword(this.auth, email, password);
       
-      // Učitaj korisnikov profil i temu
+
       await this.loadUserProfile(credential.user.uid);
       
       this.router.navigate(['/dashboard']);
@@ -91,9 +86,7 @@ export class AuthService {
     }
   }
 
-  /**
-   * LOGOUT
-   */
+
   async logout(): Promise<void> {
     try {
       await signOut(this.auth);
@@ -105,9 +98,7 @@ export class AuthService {
     }
   }
 
-  /**
-   * Učitava korisnički profil iz Firestore
-   */
+
   private async loadUserProfile(uid: string): Promise<void> {
     try {
       const userDocRef = doc(this.firestore, `users/${uid}/profile/data`);
@@ -122,23 +113,17 @@ export class AuthService {
     }
   }
 
-  /**
-   * Vraća trenutnog korisnika
-   */
+
   getCurrentUser(): User | null {
     return this.currentUser;
   }
 
-  /**
-   * Da li je korisnik ulogovan
-   */
+
   isLoggedIn(): boolean {
     return this.currentUser !== null;
   }
 
-  /**
-   * Handler za Firebase Auth greške
-   */
+
   private handleAuthError(error: any): Error {
     let message = 'Greška prilikom autentifikacije.';
     

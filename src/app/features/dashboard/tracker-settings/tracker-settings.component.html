@@ -1,0 +1,78 @@
+<div class="settings-wrapper">
+  <header class="settings-header">
+    <button class="btn-back" (click)="goBack()">← Nazad</button>
+    <h1>⚙️ Tracker Settings</h1>
+    <button class="btn-save" (click)="savePreferences()">
+      💾 Sačuvaj
+    </button>
+  </header>
+
+  <div class="settings-container">
+    
+    <div class="info-card">
+      <div class="info-icon">ℹ️</div>
+      <div class="info-content">
+        <h3>Prilagodi svoje trackere</h3>
+        <p>Izaberi koje trackere želiš da koristiš. Samo označeni trackeri će biti vidljivi na glavnom dashboardu.</p>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-number">{{ enabledCount }}</span>
+        <span class="stat-label">Aktivni trackeri</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">{{ totalCount }}</span>
+        <span class="stat-label">Ukupno trackera</span>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="action-btn" (click)="enableAll()">
+        ✅ Uključi sve
+      </button>
+      <button class="action-btn" (click)="disableAll()">
+        ❌ Isključi sve
+      </button>
+    </div>
+
+    <div class="trackers-grid">
+      <div 
+        *ngFor="let tracker of trackers" 
+        class="tracker-setting-card"
+        [class.enabled]="tracker.enabled"
+        [style.--card-color]="tracker.color"
+      >
+        <div class="card-header">
+          <div class="tracker-info">
+            <span class="tracker-icon">{{ tracker.icon }}</span>
+            <div>
+              <h3>{{ tracker.title }}</h3>
+              <p>{{ tracker.description }}</p>
+            </div>
+          </div>
+          <label class="toggle-switch">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="tracker.enabled"
+              (change)="updateCount()"
+            />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="save-reminder" *ngIf="hasChanges">
+      <div class="reminder-content">
+        <span class="reminder-icon">⚠️</span>
+        <span>Imaš nesačuvane promjene!</span>
+        <button class="btn-save-small" (click)="savePreferences()">
+          Sačuvaj sada
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -5,15 +5,15 @@
         <p>Dobrodošao/la! Popuni podatke za registraciju.</p>
       </div>
   
-      <!-- Error Message -->
+
       <div class="error-message" *ngIf="errorMessage">
         {{ errorMessage }}
       </div>
   
-      <!-- Register Form -->
+
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         
-        <!-- Name Input -->
+
         <div class="form-group">
           <label for="name">Ime</label>
           <input 
@@ -29,7 +29,7 @@
           </div>
         </div>
   
-        <!-- Email Input -->
+
         <div class="form-group">
           <label for="email">Email</label>
           <input 
@@ -45,7 +45,7 @@
           </div>
         </div>
   
-        <!-- Password Input -->
+
         <div class="form-group">
           <label for="password">Lozinka</label>
           <input 
@@ -61,7 +61,7 @@
           </div>
         </div>
   
-        <!-- Theme Selection -->
+
         <div class="form-group">
           <label>Izaberi Temu</label>
           <div class="theme-selector">
@@ -81,7 +81,7 @@
           </div>
         </div>
   
-        <!-- Submit Button -->
+
         <button 
           type="submit" 
           class="btn btn-primary"
@@ -93,7 +93,7 @@
   
       </form>
   
-      <!-- Link to Login -->
+
       <div class="auth-footer">
         <p>Već imaš nalog? <a routerLink="/login">Prijavi se</a></p>
       </div>

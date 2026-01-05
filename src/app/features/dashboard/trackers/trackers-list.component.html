@@ -1,0 +1,61 @@
+<div class="trackers-wrapper">
+  <header class="trackers-header">
+    <button class="btn-back" (click)="goBack()">← Nazad</button>
+    <h1>📊 Trackers</h1>
+    <button class="btn-settings" (click)="goToSettings()">
+      ⚙️ Postavke
+    </button>
+  </header>
+
+  <div class="trackers-container">
+    
+    <div class="welcome-banner">
+      <h2>🎯 Tvoji Trackeri</h2>
+      <p>Izaberi tracker za praćenje svojih aktivnosti</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <h3>{{ enabledTrackers.length }}</h3>
+          <p>Aktivnih trackera</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-info">
+          <h3>{{ totalTrackers }}</h3>
+          <p>Ukupno dostupno</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="enabledTrackers.length === 0">
+      <div class="empty-icon">⚙️</div>
+      <h2>Nema aktivnih trackera</h2>
+      <p>Idi u postavke i omogući trackere koje želiš koristiti</p>
+      <button class="btn-enable" (click)="goToSettings()">
+        Omogući trackere
+      </button>
+    </div>
+
+    <div class="tracker-grid" *ngIf="enabledTrackers.length > 0">
+      <div 
+        *ngFor="let tracker of enabledTrackers" 
+        class="tracker-card"
+        (click)="goToTracker(tracker.route)"
+        [style.--card-color]="tracker.color"
+      >
+        <div class="card-icon">{{ tracker.icon }}</div>
+        <h3>{{ tracker.title }}</h3>
+        <p>{{ tracker.description }}</p>
+        <div class="card-footer">
+          <span class="badge">Aktivan</span>
+          <span class="arrow">→</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

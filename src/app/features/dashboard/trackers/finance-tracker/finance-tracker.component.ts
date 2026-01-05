@@ -54,7 +54,7 @@ export class FinanceTrackerComponent implements OnInit, AfterViewInit {
       paymentMethod: ['cash', Validators.required]
     });
 
-    // Update categories when type changes
+
     this.financeForm.get('type')?.valueChanges.subscribe(() => {
       this.financeForm.patchValue({ category: '' });
     });
@@ -133,12 +133,12 @@ export class FinanceTrackerComponent implements OnInit, AfterViewInit {
   get filteredEntries(): FinanceEntry[] {
     let filtered = this.financeEntries;
 
-    // Filter by type
+
     if (this.filterType !== 'all') {
       filtered = filtered.filter(e => e.type === this.filterType);
     }
 
-    // Filter by period
+
     const now = new Date();
     if (this.filterPeriod !== 'all') {
       filtered = filtered.filter(e => {
@@ -412,6 +412,6 @@ export class FinanceTrackerComponent implements OnInit, AfterViewInit {
   }
 
   goBack() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/dashboard/trackers']);
   }
 }

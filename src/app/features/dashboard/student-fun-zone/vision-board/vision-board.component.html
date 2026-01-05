@@ -1,0 +1,84 @@
+<div class="vision-board-container">
+  <div class="header">
+    <button class="btn-back" routerLink="/fun-zone">← Nazad</button>
+    <h1>Student Fun Zone - Vision Board</h1>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn-tool" (click)="openAddModal()">
+      + Post It
+    </button>
+    <button class="btn-tool danger" (click)="clearBoard()">
+      🗑️ Obriši ploču
+    </button>
+  </div>
+
+  <div 
+    class="cork-board"
+    (mousemove)="onBoardMouseMove($event)"
+    (mouseup)="onBoardMouseUp()"
+    (mouseleave)="onBoardMouseUp()">
+    
+    <div 
+      *ngFor="let note of notes"
+      class="sticky-note"
+      [style.background-color]="note.color"
+      [style.left.%]="note.x"
+      [style.top.%]="note.y"
+      (mousedown)="onNoteMouseDown($event, note)">
+      
+      <button class="btn-delete-note" (click)="deleteNote(note.id)">✕</button>
+      <p>{{ note.text }}</p>
+    </div>
+
+    <div *ngIf="notes.length === 0" class="empty-state">
+      <p>📌 Klikni "Post It" da dodaš bilješku na svoju vision board!</p>
+    </div>
+  </div>
+
+
+  <div class="modal-overlay" *ngIf="showAddModal" (click)="closeAddModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>Dodaj bilješku</h2>
+      
+      <form (ngSubmit)="addNote()">
+        <div class="form-group">
+          <label for="noteText">Tekst *</label>
+          <textarea 
+            id="noteText"
+            [(ngModel)]="newNoteText"
+            name="noteText"
+            placeholder="Upiši svoju viziju, cilj ili ideju..."
+            rows="4"
+            required
+            autofocus>
+          </textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Boja bilješke</label>
+          <div class="color-selector">
+            <button
+              *ngFor="let color of colors"
+              type="button"
+              class="color-option"
+              [class.selected]="selectedColor === color.value"
+              [style.background-color]="color.value"
+              (click)="selectedColor = color.value"
+              [title]="color.name">
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="closeAddModal()">
+            Otkaži
+          </button>
+          <button type="submit" class="btn-submit" [disabled]="!newNoteText.trim()">
+            Dodaj
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

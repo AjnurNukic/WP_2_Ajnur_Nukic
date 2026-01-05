@@ -1,4 +1,6 @@
 <div class="tracker-wrapper">
+
+
   <header class="tracker-header">
     <button class="btn-back" (click)="goBack()">← Nazad</button>
     <h1>🙏 Gratitude Journal</h1>
@@ -7,161 +9,164 @@
     </button>
   </header>
 
-  <div class="stats-container">
-    <div class="stat-card streak">
-      <div class="stat-icon">🔥</div>
-      <div class="stat-info">
-        <h3>{{ getCurrentStreak() }}</h3>
-        <p>Trenutni niz</p>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">⭐</div>
-      <div class="stat-info">
-        <h3>{{ getLongestStreak() }}</h3>
-        <p>Najduži niz</p>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">📖</div>
-      <div class="stat-info">
-        <h3>{{ gratitudeEntries.length }}</h3>
-        <p>Ukupno zapisa</p>
-      </div>
-    </div>
-  </div>
 
-  <div class="add-form" *ngIf="showForm">
-    <form [formGroup]="gratitudeForm" (ngSubmit)="addGratitudeEntry()">
-      <div class="form-container">
-        
-        <div class="form-group">
-          <label>📅 Datum</label>
-          <input type="date" formControlName="date" />
+  <div class="tracker-content">
+
+
+    <div class="stats-container">
+      <div class="stat-card streak">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-info">
+          <h3>{{ getCurrentStreak() }}</h3>
+          <p>Trenutni niz</p>
         </div>
+      </div>
 
-        <div class="form-group">
-          <label>💭 Za šta si zahvalan/na danas?</label>
-          <div class="items-list">
-            <div *ngFor="let item of items.controls; let i = index" class="item-input-group">
-              <input 
-                type="text" 
-                [formControl]="$any(item)" 
-                [placeholder]="'Stavka ' + (i + 1)"
-                class="item-input"
-              />
-              <button 
-                type="button" 
-                class="btn-remove-item" 
-                (click)="removeItem(i)"
-                *ngIf="items.length > 1"
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-info">
+          <h3>{{ getLongestStreak() }}</h3>
+          <p>Najduži niz</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📖</div>
+        <div class="stat-info">
+          <h3>{{ gratitudeEntries.length }}</h3>
+          <p>Ukupno zapisa</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="add-form" *ngIf="showForm">
+      <form [formGroup]="gratitudeForm" (ngSubmit)="addGratitudeEntry()">
+        <div class="form-container">
+
+          <div class="form-group">
+            <label>📅 Datum</label>
+            <input type="date" formControlName="date" />
+          </div>
+
+          <div class="form-group">
+            <label>💭 Za šta si zahvalan/na danas?</label>
+
+            <div class="items-list">
+              <div
+                *ngFor="let item of items.controls; let i = index"
+                class="item-input-group"
               >
-                ✕
-              </button>
+                <input
+                  type="text"
+                  [formControl]="$any(item)"
+                  [placeholder]="'Stavka ' + (i + 1)"
+                  class="item-input"
+                />
+                <button
+                  type="button"
+                  class="btn-remove-item"
+                  (click)="removeItem(i)"
+                  *ngIf="items.length > 1"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
-          </div>
-          <button 
-            type="button" 
-            class="btn-add-item" 
-            (click)="addItem()"
-            *ngIf="items.length < 10"
-          >
-            ➕ Dodaj još stavku
-          </button>
-        </div>
 
-        <div class="form-group">
-          <label>✨ Highlights - najbolja stvar danas</label>
-          <textarea 
-            formControlName="highlight" 
-            rows="3"
-            placeholder="Opiši najljepši trenutak dana..."
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>😊 Kako se osjećaš?</label>
-          <div class="mood-selector">
-            <label class="mood-option" *ngFor="let m of ['amazing', 'good', 'okay', 'rough']">
-              <input 
-                type="radio" 
-                formControlName="mood" 
-                [value]="m"
-              />
-              <span class="mood-emoji">{{ getMoodEmoji(m) }}</span>
-              <span class="mood-label">{{ getMoodName(m) }}</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>🎨 Boja dana</label>
-          <div class="color-picker">
             <button
               type="button"
-              *ngFor="let color of colors"
-              class="color-btn"
-              [class.selected]="selectedColor === color.value"
-              [style.background]="color.value"
-              (click)="selectedColor = color.value"
-              [title]="color.name"
+              class="btn-add-item"
+              (click)="addItem()"
+              *ngIf="items.length < 10"
             >
-              <span class="color-emoji">{{ color.emoji }}</span>
+              ➕ Dodaj još stavku
             </button>
           </div>
+
+          <div class="form-group">
+            <label>✨ Highlight dana</label>
+            <textarea
+              formControlName="highlight"
+              rows="3"
+              placeholder="Opiši najljepši trenutak dana..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>😊 Kako se osjećaš?</label>
+            <div class="mood-selector">
+              <label class="mood-option" *ngFor="let m of ['amazing','good','okay','rough']">
+                <input type="radio" formControlName="mood" [value]="m" />
+                <span class="mood-emoji">{{ getMoodEmoji(m) }}</span>
+                <span class="mood-label">{{ getMoodName(m) }}</span>
+              </label>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="btn-submit"
+            [disabled]="gratitudeForm.invalid"
+          >
+            💾 Sačuvaj zahvalnost
+          </button>
+
         </div>
-
-        <button type="submit" class="btn-submit" [disabled]="gratitudeForm.invalid">
-          💾 Sačuvaj zahvalnost
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <div class="loading" *ngIf="isLoading">
-    <div class="spinner"></div>
-    <p>Učitavanje...</p>
-  </div>
-
-  <div class="entries-container" *ngIf="!isLoading">
-    <div class="empty-state" *ngIf="gratitudeEntries.length === 0">
-      <div class="empty-icon">🙏</div>
-      <h2>Nema zapisa</h2>
-      <p>Započni svoj gratitude journal!</p>
+      </form>
     </div>
 
-    <div class="entries-masonry" *ngIf="gratitudeEntries.length > 0">
-      <div 
-        *ngFor="let entry of gratitudeEntries" 
-        class="gratitude-card"
-        [style.border-top-color]="entry.color"
-      >
-        <div class="card-header" [style.background]="entry.color + '15'">
-          <div class="card-date">
-            <span class="date-text">{{ formatDate(entry.date) }}</span>
-            <span class="mood-emoji-large">{{ getMoodEmoji(entry.mood) }}</span>
-          </div>
-          <button class="btn-delete" (click)="deleteGratitudeEntry(entry.id)">🗑️</button>
-        </div>
 
-        <div class="card-body">
-          <div class="streak-badge" *ngIf="entry.streak > 1">
-            🔥 {{ entry.streak }} dana zaredom
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Učitavanje...</p>
+    </div>
+
+
+    <div class="entries-container" *ngIf="!isLoading">
+
+      <div class="empty-state" *ngIf="gratitudeEntries.length === 0">
+        <div class="empty-icon">🙏</div>
+        <h2>Nema zapisa</h2>
+        <p>Započni svoj gratitude journal!</p>
+      </div>
+
+      <div class="entries-masonry" *ngIf="gratitudeEntries.length > 0">
+        <div *ngFor="let entry of gratitudeEntries" class="gratitude-card">
+
+          <div class="card-header">
+            <div class="card-date">
+              <span class="date-text">{{ formatDate(entry.date) }}</span>
+              <span class="mood-emoji-large">{{ getMoodEmoji(entry.mood) }}</span>
+            </div>
+            <button class="btn-delete" (click)="deleteGratitudeEntry(entry.id)">
+              🗑️
+            </button>
           </div>
 
-          <div class="gratitude-items">
-            <h4>💭 Zahvalan/na sam za:</h4>
-            <ul>
-              <li *ngFor="let item of entry.items">{{ item }}</li>
-            </ul>
-          </div>
+          <div class="card-body">
 
-          <div class="highlight-section" [style.border-left-color]="entry.color">
-            <h4>✨ Highlight dana:</h4>
-            <p>{{ entry.highlight }}</p>
+            <div class="streak-badge" *ngIf="entry.streak > 1">
+              🔥 {{ entry.streak }} dana zaredom
+            </div>
+
+            <div class="gratitude-items">
+              <h4>💭 Zahvalan/na sam za:</h4>
+              <ul>
+                <li *ngFor="let item of entry.items">{{ item }}</li>
+              </ul>
+            </div>
+
+            <div class="highlight-section">
+              <h4>✨ Highlight dana:</h4>
+              <p>{{ entry.highlight }}</p>
+            </div>
+
           </div>
         </div>
       </div>
+
     </div>
+
   </div>
 </div>

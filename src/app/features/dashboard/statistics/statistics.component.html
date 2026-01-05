@@ -1,0 +1,147 @@
+<div class="statistics-container">
+  <button class="btn-back" routerLink="/dashboard">← Nazad</button>
+  
+  <div class="header">
+    <h1>📈 Statistika i Preporuke</h1>
+    <p>Analiza tvojih navika i personalizovani uvidi</p>
+  </div>
+
+
+  <div class="filter-section">
+    <label>Prikaži podatke za:</label>
+    <div class="filter-buttons">
+      <button 
+        class="filter-btn"
+        [class.active]="selectedPeriod === 'week'"
+        (click)="selectedPeriod = 'week'; onPeriodChange()">
+        📅 Sedmicu (7 dana)
+      </button>
+      <button 
+        class="filter-btn"
+        [class.active]="selectedPeriod === 'month'"
+        (click)="selectedPeriod = 'month'; onPeriodChange()">
+        📆 Mjesec (30 dana)
+      </button>
+      <button 
+        class="filter-btn"
+        [class.active]="selectedPeriod === 'custom'"
+        (click)="selectedPeriod = 'custom'">
+        🗓️ Prilagođeni period
+      </button>
+    </div>
+
+
+    <div class="date-range-section" *ngIf="selectedPeriod === 'custom'">
+      <div class="date-inputs">
+        <div class="date-input-group">
+          <label for="startDate">Od:</label>
+          <input 
+            type="date" 
+            id="startDate"
+            class="date-input"
+            [(ngModel)]="startDate"
+            (change)="onDateRangeChange()"
+            [max]="endDate">
+        </div>
+        <div class="date-input-group">
+          <label for="endDate">Do:</label>
+          <input 
+            type="date" 
+            id="endDate"
+            class="date-input"
+            [(ngModel)]="endDate"
+            (change)="onDateRangeChange()"
+            [min]="startDate">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">😴</div>
+      <h3>Prosječno spavanje</h3>
+      <p class="stat-value">{{ avgSleep.toFixed(1) }}h</p>
+      <p class="stat-label">po noći</p>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">📚</div>
+      <h3>Prosječno učenje</h3>
+      <p class="stat-value">{{ avgStudy.toFixed(1) }}h</p>
+      <p class="stat-label">dnevno</p>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">😊</div>
+      <h3>Prosječno raspoloženje</h3>
+      <p class="stat-value">{{ avgMood.toFixed(1) }}/10</p>
+      <p class="stat-label">ocjena</p>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">💧</div>
+      <h3>Prosječan unos vode</h3>
+      <p class="stat-value">{{ avgWater.toFixed(1) }}</p>
+      <p class="stat-label">čaša</p>
+    </div>
+  </div>
+
+  <div class="insights-section">
+    <h2>🤖 AI Preporuke i Uvidi</h2>
+    <div class="insights-grid">
+      <div *ngFor="let insight of aiInsights" class="insight-card">
+        <p>{{ insight }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-section">
+    <div class="chart-container">
+      <canvas #sleepChart></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas #studyChart></canvas>
+    </div>
+    <div class="chart-container pie-chart">
+      <canvas #activityChart></canvas>
+    </div>
+  </div>
+
+  <div class="comparison-section">
+    <h2>📈 Poređenje napretka</h2>
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <h3>Ova sedmica vs Prošla sedmica</h3>
+        <div class="comparison-item">
+          <span>Spavanje:</span>
+          <span class="trend up">+0.5h ↗️</span>
+        </div>
+        <div class="comparison-item">
+          <span>Učenje:</span>
+          <span class="trend down">-0.3h ↘️</span>
+        </div>
+        <div class="comparison-item">
+          <span>Raspoloženje:</span>
+          <span class="trend up">+1.2 ↗️</span>
+        </div>
+      </div>
+      
+      <div class="comparison-card">
+        <h3>Ovaj mjesec vs Prošli mjesec</h3>
+        <div class="comparison-item">
+          <span>Spavanje:</span>
+          <span class="trend up">+0.8h ↗️</span>
+        </div>
+        <div class="comparison-item">
+          <span>Učenje:</span>
+          <span class="trend up">+0.5h ↗️</span>
+        </div>
+        <div class="comparison-item">
+          <span>Raspoloženje:</span>
+          <span class="trend up">+0.9 ↗️</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -35,9 +35,7 @@ export class SleepTrackerComponent implements OnInit {
     await this.loadSleepEntries();
   }
 
-  /**
-   * Učitaj sve sleep entries
-   */
+
   async loadSleepEntries() {
     this.isLoading = true;
     try {
@@ -49,9 +47,7 @@ export class SleepTrackerComponent implements OnInit {
     }
   }
 
-  /**
-   * Dodaj sleep entry
-   */
+
   async addSleepEntry() {
     if (this.sleepForm.invalid) return;
 
@@ -78,9 +74,7 @@ export class SleepTrackerComponent implements OnInit {
     }
   }
 
-  /**
-   * Obriši entry
-   */
+
   async deleteSleepEntry(entryId: string | undefined) {
     if (!entryId) return;
     
@@ -94,34 +88,26 @@ export class SleepTrackerComponent implements OnInit {
     }
   }
 
-  /**
-   * Generiši zvjezdice za prikaz
-   */
+
   getStars(quality: number): string {
     return '⭐'.repeat(quality) + '☆'.repeat(5 - quality);
   }
 
-  /**
-   * Prosjek sati spavanja
-   */
+
   getAverageHours(): number {
     if (this.sleepEntries.length === 0) return 0;
     const total = this.sleepEntries.reduce((sum, entry) => sum + entry.hours, 0);
     return Math.round((total / this.sleepEntries.length) * 10) / 10;
   }
 
-  /**
-   * Prosjek kvalitete
-   */
+
   getAverageQuality(): number {
     if (this.sleepEntries.length === 0) return 0;
     const total = this.sleepEntries.reduce((sum, entry) => sum + entry.quality, 0);
     return Math.round((total / this.sleepEntries.length) * 10) / 10;
   }
 
-  /**
-   * Format datuma
-   */
+
   formatDate(date: Date): string {
     return new Date(date).toLocaleDateString('bs-BA', { 
       day: 'numeric', 
@@ -130,10 +116,8 @@ export class SleepTrackerComponent implements OnInit {
     });
   }
 
-  /**
-   * Nazad na dashboard
-   */
+ 
   goBack() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/dashboard/trackers']);
   }
 }

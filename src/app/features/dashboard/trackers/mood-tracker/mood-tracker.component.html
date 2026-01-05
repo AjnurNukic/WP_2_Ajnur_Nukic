@@ -1,143 +1,119 @@
 <div class="tracker-wrapper">
-    <header class="tracker-header">
-      <button class="btn-back" (click)="goBack()">← Nazad</button>
-      <h1>😊 Mood Tracker</h1>
-      <button class="btn-add" (click)="showForm = !showForm">
-        {{ showForm ? 'Otkaži' : '+ Dodaj Mood' }}
-      </button>
-    </header>
-  
-    <div class="stats-container">
-      <div class="stat-card">
-        <div class="stat-icon">{{ getMoodEmoji(getAverageRating()) }}</div>
-        <div class="stat-info">
-          <h3>{{ getAverageRating() }}/10</h3>
-          <p>Prosječno raspoloženje</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">📊</div>
-        <div class="stat-info">
-          <h3>{{ moodEntries.length }}</h3>
-          <p>Zapisa</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">📅</div>
-        <div class="stat-info">
-          <h3>{{ moodEntries.length > 0 ? moodEntries.length : 0 }}</h3>
-          <p>Dana evidentirano</p>
-        </div>
+  <header class="tracker-header">
+    <button class="btn-back" (click)="goBack()">← Nazad</button>
+    <h1>😊 Mood Tracker</h1>
+    <button class="btn-add" (click)="showForm = !showForm">
+      {{ showForm ? 'Otkaži' : '+ Dodaj Mood' }}
+    </button>
+  </header>
+
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-icon">{{ getMoodEmoji(getAverageRating()) }}</div>
+      <div class="stat-info">
+        <h3>{{ getAverageRating() }}/10</h3>
+        <p>Prosječno raspoloženje</p>
       </div>
     </div>
-  
-    <div class="add-form" *ngIf="showForm">
-      <form [formGroup]="moodForm" (ngSubmit)="addMoodEntry()">
-        <div class="form-container">
-          <div class="form-group">
-            <label>Datum</label>
-            <input type="date" formControlName="date" />
-          </div>
-  
-          <div class="form-group">
-            <label>Ocjena raspoloženja (1-10)</label>
-            <div class="rating-selector">
-              <input 
-                type="range" 
-                formControlName="rating" 
-                min="1" 
-                max="10" 
-                step="1"
-                class="rating-slider"
-              />
-              <div class="rating-display">
-                <span class="rating-emoji">{{ getMoodEmoji(moodForm.get('rating')?.value) }}</span>
-                <span class="rating-number">{{ moodForm.get('rating')?.value }}/10</span>
-              </div>
-            </div>
-          </div>
-  
-          <div class="form-group full-width">
-            <label>Kako se osjećaš? (odaberi emocije)</label>
-            <div class="emotions-grid">
-              <button
-                *ngFor="let emotion of availableEmotions"
-                type="button"
-                class="emotion-btn"
-                [class.selected]="isEmotionSelected(emotion.label)"
-                (click)="toggleEmotion(emotion.label)"
-              >
-                <span class="emotion-emoji">{{ emotion.emoji }}</span>
-                <span class="emotion-label">{{ emotion.label }}</span>
-              </button>
-            </div>
-          </div>
-  
-          <div class="form-group full-width">
-            <label>Bilješke (opciono)</label>
-            <textarea 
-              formControlName="notes" 
-              rows="4" 
-              placeholder="Što se desilo danas, kako se osjećaš..."
-            ></textarea>
-          </div>
-  
-          <button type="submit" class="btn-submit" [disabled]="moodForm.invalid">
-            💾 Sačuvaj
-          </button>
-        </div>
-      </form>
-    </div>
-  
-    <div class="loading" *ngIf="isLoading">
-      <div class="spinner"></div>
-      <p>Učitavanje...</p>
-    </div>
-  
-    <div class="entries-container" *ngIf="!isLoading">
-      <div class="empty-state" *ngIf="moodEntries.length === 0">
-        <div class="empty-icon">😊</div>
-        <h2>Nema zapisa</h2>
-        <p>Dodaj prvo raspoloženje!</p>
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-info">
+        <h3>{{ moodEntries.length }}</h3>
+        <p>Zapisa</p>
       </div>
-  
-      <div class="entries-list" *ngIf="moodEntries.length > 0">
-        <div 
-          *ngFor="let entry of moodEntries" 
-          class="entry-card"
-          [style.border-left-color]="getMoodColor(entry.rating)"
-        >
-          <div class="entry-header">
-            <div class="entry-date">
-              <span class="mood-emoji">{{ getMoodEmoji(entry.rating) }}</span>
-              <span>{{ formatDate(entry.date) }}</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📅</div>
+      <div class="stat-info">
+        <h3>{{ moodEntries.length > 0 ? moodEntries.length : 0 }}</h3>
+        <p>Dana evidentirano</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="add-form" *ngIf="showForm">
+    <form [formGroup]="moodForm" (ngSubmit)="addMoodEntry()">
+      <div class="form-container">
+        <div class="form-group">
+          <label>Datum</label>
+          <input type="date" formControlName="date" />
+        </div>
+
+        <div class="form-group">
+          <label>Ocjena raspoloženja (1-10)</label>
+          <div class="rating-selector">
+            <input 
+              type="range" 
+              formControlName="rating" 
+              min="1" 
+              max="10" 
+              step="1"
+              class="rating-slider"
+            />
+            <div class="rating-display">
+              <span class="rating-emoji">{{ getMoodEmoji(moodForm.get('rating')?.value) }}</span>
+              <span class="rating-number">{{ moodForm.get('rating')?.value }}/10</span>
             </div>
-            <button class="btn-delete" (click)="deleteMoodEntry(entry.id)">🗑️</button>
           </div>
-  
-          <div class="entry-rating">
-            <div class="rating-bar-container">
-              <div 
-                class="rating-bar-fill" 
-                [style.width.%]="entry.rating * 10"
-                [style.background]="getMoodColor(entry.rating)"
-              ></div>
-            </div>
-            <span class="rating-text">{{ entry.rating }}/10</span>
+        </div>
+
+        <div class="form-group full-width">
+          <label>Bilješke (opciono)</label>
+          <textarea 
+            formControlName="notes" 
+            rows="4" 
+            placeholder="Što se desilo danas, kako se osjećaš..."
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="moodForm.invalid">
+          💾 Sačuvaj
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Učitavanje...</p>
+  </div>
+
+  <div class="entries-container" *ngIf="!isLoading">
+    <div class="empty-state" *ngIf="moodEntries.length === 0">
+      <div class="empty-icon">😊</div>
+      <h2>Nema zapisa</h2>
+      <p>Dodaj prvo raspoloženje!</p>
+    </div>
+
+    <div class="entries-list" *ngIf="moodEntries.length > 0">
+      <div 
+        *ngFor="let entry of moodEntries" 
+        class="entry-card"
+        [style.border-left-color]="getMoodColor(entry.rating)"
+      >
+        <div class="entry-header">
+          <div class="entry-date">
+            <span class="mood-emoji">{{ getMoodEmoji(entry.rating) }}</span>
+            <span>{{ formatDate(entry.date) }}</span>
           </div>
-  
-          <div class="entry-emotions" *ngIf="entry.emotions.length > 0">
-            <div class="emotions-list">
-              <span *ngFor="let emotion of entry.emotions" class="emotion-tag">
-                {{ emotion }}
-              </span>
-            </div>
+          <button class="btn-delete" (click)="deleteMoodEntry(entry.id)">🗑️</button>
+        </div>
+
+        <div class="entry-rating">
+          <div class="rating-bar-container">
+            <div 
+              class="rating-bar-fill" 
+              [style.width.%]="entry.rating * 10"
+              [style.background]="getMoodColor(entry.rating)"
+            ></div>
           </div>
-  
-          <div class="entry-notes" *ngIf="entry.notes">
-            <strong>Bilješke:</strong> {{ entry.notes }}
-          </div>
+          <span class="rating-text">{{ entry.rating }}/10</span>
+        </div>
+
+        <div class="entry-notes" *ngIf="entry.notes">
+          <strong>Bilješke:</strong> {{ entry.notes }}
         </div>
       </div>
     </div>
   </div>
+</div>

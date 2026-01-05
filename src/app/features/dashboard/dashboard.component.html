@@ -1,5 +1,5 @@
 <div class="dashboard-wrapper">
-  <!-- Header -->
+
   <header class="dashboard-header">
     <div class="header-content">
       <div class="header-left">
@@ -7,12 +7,6 @@
         <p>Dobrodošao/la, <strong>{{ userName }}</strong>! 👋</p>
       </div>
       <div class="header-right">
-        <button class="btn-icon" routerLink="/statistics" title="Statistika">
-          📊
-        </button>
-        <button class="btn-icon" routerLink="/fun-zone" title="Fun Zone">
-          🎮
-        </button>
         <button class="btn-logout" (click)="logout()">
           Odjavi se
         </button>
@@ -20,33 +14,60 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="dashboard-main">
     <div class="container">
       
-      <!-- Welcome Card -->
       <div class="welcome-card">
-        <h2>🎯 Izaberi Tracker</h2>
-        <p>Klikni na karticu da bi započeo praćenje svojih aktivnosti</p>
+        <h2>🎯 Dobrodošli u dashboard</h2>
+        <p>Izaberite kategoriju kako bi nastavili</p>
       </div>
 
-      <!-- Tracker Grid -->
-      <div class="tracker-grid">
-        <div 
-          *ngFor="let tracker of trackers" 
-          class="tracker-card"
-          [class.disabled]="!tracker.enabled"
-          (click)="tracker.enabled && goToTracker(tracker.route)"
-          [style.--card-color]="tracker.color"
-        >
-          <div class="card-icon">{{ tracker.icon }}</div>
-          <h3>{{ tracker.title }}</h3>
-          <p>{{ tracker.description }}</p>
-          <div class="card-footer">
-            <span class="badge" *ngIf="tracker.enabled">Aktivan</span>
-            <span class="badge disabled" *ngIf="!tracker.enabled">Uskoro</span>
+
+      <div class="main-grid">
+        
+        <div class="main-card trackers-card" (click)="goToTrackers()">
+          <div class="card-icon-large">📊</div>
+          <h2>Trackers</h2>
+          <p>Prati svoje dnevne aktivnosti, navike i ciljeve</p>
+          <div class="card-stats">
+            <span class="stat-badge">{{ enabledTrackersCount }} aktivnih</span>
           </div>
+          <div class="card-arrow">→</div>
         </div>
+
+ 
+        <div class="main-card settings-card" (click)="goToTrackerSettings()">
+          <div class="card-icon-large">⚙️</div>
+          <h2>Tracker Settings</h2>
+          <p>Prilagodi koje trackere želiš da koristiš</p>
+          <div class="card-stats">
+            <span class="stat-badge">{{ totalTrackersCount }} ukupno</span>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+
+
+        <div class="main-card funzone-card" (click)="goToFunZone()">
+          <div class="card-icon-large">🎮</div>
+          <h2>Student Fun Zone</h2>
+          <p>Opusti se sa mini igricama i zabavnim aktivnostima</p>
+          <div class="card-stats">
+            <span class="stat-badge">4 igrice</span>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+
+
+        <div class="main-card statistics-card" (click)="goToStatistics()">
+          <div class="card-icon-large">📈</div>
+          <h2>Statistics</h2>
+          <p>Pregledaj svoj napredak i statistike</p>
+          <div class="card-stats">
+            <span class="stat-badge">Detaljni izvještaji</span>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+
       </div>
 
     </div>

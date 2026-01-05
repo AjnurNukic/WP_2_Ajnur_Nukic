@@ -1,13 +1,11 @@
-// src/styles/_mixins.scss
 
-// Flexbox centering
 @mixin flex-center {
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
-  // Card style
+
   @mixin card {
     background: var(--card-bg);
     border-radius: $radius-lg;
@@ -21,7 +19,7 @@
     }
   }
   
-  // Responsive
+
   @mixin tablet {
     @media (max-width: 768px) {
       @content;

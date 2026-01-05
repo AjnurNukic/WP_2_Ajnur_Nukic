@@ -23,7 +23,8 @@ import {
   CalendarEntry, 
   GratitudeEntry,
   FinanceEntry,
-  ReflectionEntry
+  ReflectionEntry,
+  WaterEntry
 } from '../models/tracker.model';
 
 @Injectable({
@@ -47,9 +48,7 @@ export class FirestoreService {
     return user.uid;
   }
 
-  // ============================================
-  // HABIT TRACKER
-  // ============================================
+
 
   async addHabit(habit: Omit<HabitEntry, 'id' | 'userId'>): Promise<string> {
     try {
@@ -157,9 +156,7 @@ export class FirestoreService {
     return streak;
   }
 
-  // ============================================
-  // SLEEP TRACKER
-  // ============================================
+
 
   async addSleepEntry(sleep: Omit<SleepEntry, 'id' | 'userId'> & { date: Date }): Promise<string> {
     try {
@@ -212,9 +209,7 @@ export class FirestoreService {
     }
   }
 
-  // ============================================
-  // STUDY PLANNER
-  // ============================================
+
 
   async addStudyEntry(study: Omit<StudyEntry, 'id' | 'userId'> & { date: Date }): Promise<string> {
     try {
@@ -268,9 +263,7 @@ export class FirestoreService {
     }
   }
 
-  // ============================================
-  // FITNESS TRACKER
-  // ============================================
+
 
   async addFitnessEntry(fitness: Omit<FitnessEntry, 'id' | 'userId'> & { date: Date }): Promise<string> {
     try {
@@ -325,9 +318,7 @@ export class FirestoreService {
     }
   }
 
-  // ============================================
-  // TASK MANAGER
-  // ============================================
+
 
   async addTask(task: Omit<TaskEntry, 'id' | 'userId'> & { dueDate: Date }): Promise<string> {
     try {
@@ -408,9 +399,7 @@ export class FirestoreService {
     }
   }
 
-  // ============================================
-  // MEAL TRACKER
-  // ============================================
+
 
   async addMealEntry(meal: Omit<MealEntry, 'id' | 'userId'> & { date: Date }): Promise<string> {
     try {
@@ -466,9 +455,7 @@ export class FirestoreService {
     }
   }
 
-  // ============================================
-  // MOOD TRACKER
-  // ============================================
+
 
   async addMoodEntry(mood: Omit<MoodEntry, 'id' | 'userId'> & { date: Date }): Promise<string> {
     try {
@@ -521,9 +508,7 @@ export class FirestoreService {
     }
   }
 
-  // ============================================
-  // CALENDAR
-  // ============================================
+
 
   async addCalendarEntry(entry: Omit<CalendarEntry, 'id' | 'userId'> & { date: Date }): Promise<string> {
     try {
@@ -602,9 +587,7 @@ export class FirestoreService {
     }
   }
 
-  // ============================================
-  // FINANCE TRACKER
-  // ============================================
+
 
   async addFinanceEntry(entry: Omit<FinanceEntry, 'id' | 'userId'> & { date: Date }): Promise<string> {
     try {
@@ -660,9 +643,6 @@ export class FirestoreService {
     }
   }
 
-  // ============================================
-  // GRATITUDE JOURNAL
-  // ============================================
 
   async addGratitudeEntry(entry: Omit<GratitudeEntry, 'id' | 'userId'> & { date: Date }): Promise<string> {
     try {
@@ -770,7 +750,6 @@ async getReflectionEntries(limit: number = 30): Promise<ReflectionEntry[]> {
     throw error;
   }
 }
-
 async deleteReflectionEntry(entryId: string): Promise<void> {
   try {
     const userId = await this.getUserId();
@@ -781,4 +760,54 @@ async deleteReflectionEntry(entryId: string): Promise<void> {
     throw error;
   }
 }
+async addWaterEntry(entry: Omit<WaterEntry, 'id' | 'userId'>): Promise<string> {
+    try {
+      const userId = await this.getUserId();
+      const waterRef = collection(this.firestore, `users/${userId}/water`);
+      const waterData = {
+        ...entry,
+        userId,
+        date: entry.date instanceof Date ? Timestamp.fromDate(entry.date) : Timestamp.fromDate(new Date(entry.date))
+      };
+      const docRef = await addDoc(waterRef, waterData);
+      return docRef.id;
+    } catch (error) {
+      console.error('Error adding water entry:', error);
+      throw error;
+    }
+  }
+
+  async getWaterEntries(limitCount: number = 30): Promise<WaterEntry[]> {
+    try {
+      const userId = await this.getUserId();
+      const waterRef = collection(this.firestore, `users/${userId}/water`);
+      const q = query(waterRef, orderBy('date', 'desc'));
+      const snapshot = await getDocs(q);
+      
+      return snapshot.docs.slice(0, limitCount).map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          userId: data['userId'] || '',
+          date: data['date']?.toDate() || new Date(),
+          glasses: data['glasses'] || 0,
+          goal: data['goal'] || 8
+        } as WaterEntry;
+      });
+    } catch (error) {
+      console.error('Error getting water entries:', error);
+      throw error;
+    }
+  }
+
+  async deleteWaterEntry(id: string): Promise<void> {
+    try {
+      const userId = await this.getUserId();
+      const entryRef = doc(this.firestore, `users/${userId}/water/${id}`);
+      await deleteDoc(entryRef);
+    } catch (error) {
+      console.error('Error deleting water entry:', error);
+      throw error;
+    }
+  }
 }

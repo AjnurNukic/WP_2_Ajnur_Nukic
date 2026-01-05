@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
   
   userName: string = 'Korisnik';
   
-  // Lista svih trackera
+
   trackers: TrackerCard[] = [
     {
       id: 'habit',
@@ -105,7 +105,7 @@ export class DashboardComponent implements OnInit {
       title: 'Gratitude Journal',
       icon: '🙏',
       description: 'Dnevnik zahvalnosti',
-      route: '/dashboard/gratitude-journal', // ✅ ISPRAVLJENA RUTA
+      route: '/dashboard/gratitude-journal',
       color: '#a855f7',
       enabled: true
     },
@@ -118,15 +118,15 @@ export class DashboardComponent implements OnInit {
       color: '#3b82f6',
       enabled: true
     },
-{
-  id: 'water',
-  title: 'Water Intake',
-  icon: '💧',
-  description: 'Prati unos vode',
-  route: '/dashboard/water-tracker',  // ← Ovo mora biti tačno
-  color: '#0ea5e9',
-  enabled: true
-}
+    {
+      id: 'water',
+      title: 'Water Intake',
+      icon: '💧',
+      description: 'Prati unos vode',
+      route: '/dashboard/water-intake',
+      color: '#0ea5e9',
+      enabled: true
+    }
   ];
 
   ngOnInit() {
@@ -134,10 +134,53 @@ export class DashboardComponent implements OnInit {
     if (user && user.email) {
       this.userName = user.email.split('@')[0];
     }
+    
+ 
+    this.loadTrackerPreferences();
+  }
+
+  loadTrackerPreferences() {
+    const saved = localStorage.getItem('trackerPreferences');
+    if (saved) {
+      const preferences = JSON.parse(saved);
+      this.trackers.forEach(tracker => {
+        if (preferences[tracker.id] !== undefined) {
+          tracker.enabled = preferences[tracker.id];
+        }
+      });
+    }
+  }
+
+  get enabledTrackers(): TrackerCard[] {
+    return this.trackers.filter(t => t.enabled);
+  }
+
+  get enabledTrackersCount(): number {
+    return this.enabledTrackers.length;
+  }
+
+  get totalTrackersCount(): number {
+    return this.trackers.length;
   }
 
   logout() {
     this.authService.logout();
+  }
+
+  goToTrackers() {
+    this.router.navigate(['/dashboard/trackers']);
+  }
+
+  goToTrackerSettings() {
+    this.router.navigate(['/dashboard/tracker-settings']);
+  }
+
+  goToFunZone() {
+    this.router.navigate(['/fun-zone']);
+  }
+
+  goToStatistics() {
+    this.router.navigate(['/dashboard/statistics']);
   }
 
   goToTracker(route: string) {

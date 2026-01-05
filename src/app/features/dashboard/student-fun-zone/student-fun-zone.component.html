@@ -1,0 +1,21 @@
+<div class="fun-zone-wrapper">
+  <header class="fun-zone-header">
+    <button class="btn-back" (click)="goBack()">← Nazad</button>
+    <h1>🎮 Student Fun Zone</h1>
+  </header>
+
+  <div class="fun-zone-grid">
+    <div 
+      *ngFor="let zone of funZones" 
+      class="fun-zone-card"
+      [style.border-color]="zone.color"
+      (click)="goToFunZone(zone.route)"
+    >
+      <div class="card-icon" [style.color]="zone.color">
+        {{ zone.icon }}
+      </div>
+      <h2>{{ zone.title }}</h2>
+      <p>{{ zone.description }}</p>
+    </div>
+  </div>
+</div>

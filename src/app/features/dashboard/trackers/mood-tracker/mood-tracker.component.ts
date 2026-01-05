@@ -22,21 +22,6 @@ export class MoodTrackerComponent implements OnInit {
   isLoading = false;
   showForm = false;
 
-  availableEmotions = [
-    { emoji: '😊', label: 'Sretan' },
-    { emoji: '😢', label: 'Tužan' },
-    { emoji: '😴', label: 'Umoran' },
-    { emoji: '😰', label: 'Anksiozan' },
-    { emoji: '😡', label: 'Ljut' },
-    { emoji: '🤗', label: 'Zahvalan' },
-    { emoji: '😎', label: 'Samopouzdan' },
-    { emoji: '😔', label: 'Depresivan' },
-    { emoji: '🥳', label: 'Uzbuđen' },
-    { emoji: '😌', label: 'Miran' }
-  ];
-
-  selectedEmotions: string[] = [];
-
   constructor() {
     this.moodForm = this.fb.group({
       date: [new Date().toISOString().split('T')[0], Validators.required],
@@ -60,19 +45,6 @@ export class MoodTrackerComponent implements OnInit {
     }
   }
 
-  toggleEmotion(emotion: string) {
-    const index = this.selectedEmotions.indexOf(emotion);
-    if (index > -1) {
-      this.selectedEmotions.splice(index, 1);
-    } else {
-      this.selectedEmotions.push(emotion);
-    }
-  }
-
-  isEmotionSelected(emotion: string): boolean {
-    return this.selectedEmotions.includes(emotion);
-  }
-
   async addMoodEntry() {
     if (this.moodForm.invalid) return;
 
@@ -82,7 +54,7 @@ export class MoodTrackerComponent implements OnInit {
       await this.firestoreService.addMoodEntry({
         date: new Date(date),
         rating: parseInt(rating),
-        emotions: this.selectedEmotions,
+        emotions: [], 
         notes
       });
 
@@ -91,7 +63,6 @@ export class MoodTrackerComponent implements OnInit {
         rating: 5,
         notes: ''
       });
-      this.selectedEmotions = [];
       this.showForm = false;
       await this.loadMoodEntries();
     } catch (error) {
@@ -142,6 +113,6 @@ export class MoodTrackerComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/dashboard/trackers']);
   }
 }

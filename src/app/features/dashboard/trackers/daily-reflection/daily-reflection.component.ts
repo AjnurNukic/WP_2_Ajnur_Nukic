@@ -57,19 +57,19 @@ export class DailyReflectionComponent implements OnInit {
       category: ['personal', Validators.required],
       mood: ['good', Validators.required],
       
-      // Pitanja
+
       whatLearned: ['', Validators.required],
       whatToDoDifferently: ['', Validators.required],
       
-      // Ciljevi
+
       goalsAchieved: [false],
       goalsDescription: [''],
       
-      // Wins & Lessons
+
       wins: this.fb.array([this.fb.control('', Validators.required)]),
       lessons: this.fb.array([this.fb.control('', Validators.required)]),
       
-      // Slobodna forma
+
       freeThoughts: ['', Validators.required]
     });
   }
@@ -249,6 +249,6 @@ export class DailyReflectionComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/dashboard/trackers']);
   }
 }

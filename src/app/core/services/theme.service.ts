@@ -1,6 +1,6 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 
-export type Theme = 'green' | 'blue' | 'dark' | 'cyberpunk';
+export type Theme = 'green' | 'blue' | 'dark';
 
 @Injectable({
   providedIn: 'root'
@@ -14,44 +14,46 @@ export class ThemeService {
     this.loadTheme();
   }
 
-  /**
-   * Postavlja temu i čuva je u localStorage
-   */
+
   setTheme(theme: Theme): void {
-    // Ukloni prethodnu temu
-    this.renderer.removeClass(document.body, `theme-${this.currentTheme}`);
-    
-    // Primjeni novu temu
+   this.renderer.removeClass(document.body, `theme-${this.currentTheme}`);
+this.renderer.addClass(document.body, `theme-${theme}`);
     this.currentTheme = theme;
     this.renderer.addClass(document.body, `theme-${theme}`);
-    
-    // Sačuvaj u localStorage
     localStorage.setItem('userTheme', theme);
   }
 
-  /**
-   * Učitava temu iz localStorage
-   */
+
   loadTheme(): void {
+    const currentUserStr = localStorage.getItem('currentUser');
+    if (currentUserStr) {
+      try {
+        const currentUser = JSON.parse(currentUserStr);
+        if (currentUser.theme) {
+          this.setTheme(currentUser.theme);
+          return;
+        }
+      } catch (e) {
+        console.error('Error parsing currentUser:', e);
+      }
+    }
+
+
     const savedTheme = localStorage.getItem('userTheme') as Theme;
     if (savedTheme) {
       this.setTheme(savedTheme);
     } else {
-      this.setTheme('green'); // Default tema
+      this.setTheme('green'); 
     }
   }
 
-  /**
-   * Vraća trenutnu temu
-   */
+
   getCurrentTheme(): Theme {
     return this.currentTheme;
   }
 
-  /**
-   * Lista dostupnih tema
-   */
+
   getAvailableThemes(): Theme[] {
-    return ['green', 'blue', 'dark', 'cyberpunk'];
+    return ['green', 'blue', 'dark'];
   }
 }
