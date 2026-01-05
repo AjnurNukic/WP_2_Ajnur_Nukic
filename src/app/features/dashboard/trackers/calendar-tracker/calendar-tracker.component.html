@@ -98,12 +98,13 @@
   
       <div class="entries-list" *ngIf="filteredEntries.length > 0">
         <div 
-          *ngFor="let entry of filteredEntries" 
-          class="entry-card"
-          [class.completed]="entry.completed"
-          [class.today]="isToday(entry.date)"
-          [class.past]="isPast(entry.date) && !entry.completed"
-        >
+  *ngFor="let entry of filteredEntries" 
+  class="entry-card"
+  [class.completed]="entry.completed"
+  [class.today]="isToday(entry.date)"
+  [class.past]="isPast(entry.date) && !entry.completed"
+  [style.border-left-color]="getTypeColor(entry.type)"
+>
        
   
           <div class="entry-content">

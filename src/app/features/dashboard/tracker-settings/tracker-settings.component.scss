@@ -43,11 +43,20 @@
 
   .btn-save {
     background: var(--success);
-    border: none;
-    color: white;
+    border: 2px solid var(--card-border);
+    color: var(--success-text);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     &:hover {
       background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(var(--primary-rgb, 102, 126, 234), 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 }
@@ -282,8 +291,8 @@
   animation: slideUp 0.3s ease;
 
   .reminder-content {
-    background: var(--warning);
-    color: var(--warning-text);
+    background: #fbbf24;
+    color: #78350f;
     padding: 1rem 2rem;
     border-radius: 12px;
     display: flex;
@@ -298,8 +307,8 @@
 
     .btn-save-small {
       padding: 0.5rem 1.25rem;
-      background: var(--warning-text);
-      color: var(--warning);
+      background: #78350f;
+      color: #fbbf24;
       border: none;
       border-radius: 6px;
       font-weight: 600;
@@ -307,7 +316,12 @@
       transition: all 0.3s ease;
 
       &:hover {
-        opacity: 0.8;
+        background: #5a1f0c;
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: translateY(0);
       }
     }
   }
@@ -321,5 +335,21 @@
   to {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .settings-header {
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    h1 {
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn-back, .btn-save {
+      flex: 1;
+    }
   }
 }
